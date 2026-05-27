@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt2C — Biblioteca Colaborativa de Prompts</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════
+   2C BRAND TOKENS
+════════════════════════════════════════ */
+:root {
+  --c-dark:  #00443D;
+  --c-teal:  #03AAA2;
+  --c-mint:  #53F5D5;
+  --c-bg:    #ECF0E8;
+
+  --f-display: 'Fraunces', serif;
+  --f-body:    'Inter', sans-serif;
+  --f-mono:    'JetBrains Mono', monospace;
+}
+
+[data-theme="dark"] {
+  --bg:         #002a26;
+  --bg2:        #003832;
+  --surface:    #00443D;
+  --panel:      #00504a;
+  --border:     rgba(83,245,213,0.12);
+  --border2:    rgba(83,245,213,0.28);
+  --text:       #ECF0E8;
+  --text-muted: rgba(236,240,232,0.55);
+  --text-dim:   rgba(236,240,232,0.28);
+  --accent:     #53F5D5;
+  --accent2:    #03AAA2;
+  --gold:       #f5c842;
+  --warn:       #ff8c5a;
+  --shadow:     0 8px 32px rgba(0,0,0,0.4);
+}
+
+[data-theme="light"] {
+  --bg:         #ECF0E8;
+  --bg2:        #dde4d8;
+  --surface:    #ffffff;
+  --panel:      #f5f8f2;
+  --border:     rgba(0,68,61,0.12);
+  --border2:    rgba(0,68,61,0.28);
+  --text:       #00443D;
+  --text-muted: rgba(0,68,61,0.62);
+  --text-dim:   rgba(0,68,61,0.32);
+  --accent:     #03AAA2;
+  --accent2:    #00443D;
+  --gold:       #c89220;
+  --warn:       #d35a25;
+  --shadow:     0 4px 20px rgba(0,68,61,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--f-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.35s, color 0.35s;
+  overflow-x: hidden;
+}
+
+[data-theme="dark"] body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(83,245,213,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(83,245,213,0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+[data-theme="dark"] body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(3,170,162,0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 90% 100%, rgba(83,245,213,0.06) 0%, transparent 55%);
+}
+
+.app { position: relative; z-index: 1; }
+
+/* ══ NAV ══ */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(0,42,38,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 62px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.35s, border-color 0.35s;
+}
+[data-theme="light"] nav { background: rgba(236,240,232,0.92); }
+
+.nav-left { display: flex; align-items: center; gap: 1.2rem; }
+
+.nav-logo { display: flex; align-items: center; gap: 0.7rem; }
+
+.nav-logo-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--c-teal), var(--c-mint));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-display); font-size: 0.75rem; font-weight: 700;
+  color: var(--c-dark); letter-spacing: -0.03em;
+}
+
+.nav-logo-text {
+  font-family: var(--f-display);
+  font-size: 1.25rem; font-weight: 700;
+  letter-spacing: -0.02em; color: var(--text);
+}
+.nav-logo-text span { color: var(--accent); font-style: italic; }
+
+.workspace-tag {
+  font-family: var(--f-mono); font-size: 0.62rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.25rem 0.7rem; border-radius: 20px;
+  background: rgba(83,245,213,0.1);
+  border: 1px solid var(--border2);
+  color: var(--accent);
+}
+
+.nav-right { display: flex; align-items: center; gap: 0.9rem; }
+
+.db-status {
+  font-family: var(--f-mono); font-size: 0.6rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex; align-items: center; gap: 0.35rem;
+}
+.db-status::before { content: '⬤'; font-size: 0.7rem; }
+
+.lang-toggle {
+  font-family: var(--f-mono); font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  background: var(--panel); border: 1px solid var(--border2);
+  border-radius: 4px; padding: 0.25rem 0.6rem;
+  color: var(--text-muted); cursor: pointer;
+  transition: all 0.2s;
+}
+.lang-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.lang-toggle .on { color: var(--accent); font-weight: 500; }
+
+.theme-toggle {
+  width: 42px; height: 22px;
+  background: var(--panel); border: 1px solid var(--border2);
+  border-radius: 20px; cursor: pointer; position: relative;
+  transition: background 0.3s;
+}
+.theme-toggle::after {
+  content: '';
+  position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.3s;
+}
+[data-theme="light"] .theme-toggle::after { transform: translateX(20px); background: var(--gold); }
+
+/* ══ HERO ══ */
+.hero {
+  padding: 4rem 2rem 3rem;
+  max-width: 1160px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.1fr 1fr;
+  gap: 3rem; align-items: center;
+}
+
+.hero-eyebrow {
+  font-family: var(--f-mono); font-size: 0.65rem;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.hero-eyebrow::before {
+  content: ''; display: inline-block;
+  width: 24px; height: 1px; background: var(--accent);
+}
+
+.hero h1 {
+  font-family: var(--f-display);
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 700; line-height: 1.05;
+  letter-spacing: -0.025em; color: var(--text);
+  margin-bottom: 1.2rem;
+}
+.hero h1 em { font-style: italic; font-weight: 600; color: var(--accent); }
+
+.hero-desc {
+  font-size: 1rem; color: var(--text-muted);
+  line-height: 1.7; max-width: 480px;
+}
+
+.hero-cta-row {
+  display: flex; gap: 0.8rem; margin-top: 2rem; flex-wrap: wrap;
+}
+
+.btn-primary {
+  font-family: var(--f-mono); font-size: 0.68rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.7rem 1.5rem;
+  background: linear-gradient(135deg, var(--c-teal), var(--c-mint));
+  color: var(--c-dark); border: none; border-radius: 6px;
+  cursor: pointer; transition: all 0.2s; font-weight: 600;
+  box-shadow: 0 4px 16px rgba(3,170,162,0.3);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(3,170,162,0.45); }
+
+.btn-ghost {
+  font-family: var(--f-mono); font-size: 0.68rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.7rem 1.5rem;
+  background: transparent; color: var(--text-muted);
+  border: 1px solid var(--border2); border-radius: 6px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--accent); }
+
+/* hero visual cards */
+.hero-visual {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 320px;
+  animation: floatIn 0.7s ease both;
+}
+
+@keyframes floatIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* decorative glow behind mockup */
+.hero-visual::before {
+  content: '';
+  position: absolute; inset: -20px;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(3,170,162,0.18) 0%, transparent 70%);
+  filter: blur(20px); pointer-events: none; z-index: 0;
+}
+
+.mockup-card {
+  position: relative; z-index: 1;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 14px; padding: 1.4rem;
+  width: 100%; max-width: 380px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  transition: transform 0.4s;
+}
+.mockup-card:hover { transform: translateY(-4px) rotate(-0.5deg); }
+
+.mockup-badge {
+  display: inline-block;
+  font-family: var(--f-mono); font-size: 0.55rem;
+  letter-spacing: 0.18em; color: var(--accent);
+  background: rgba(83,245,213,0.08);
+  padding: 0.25rem 0.65rem; border-radius: 3px;
+  border: 1px solid var(--border2); margin-bottom: 0.9rem;
+}
+
+.mockup-header {
+  display: flex; align-items: flex-start; gap: 0.7rem; margin-bottom: 0.7rem;
+}
+
+.mockup-votes {
+  display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+}
+.mockup-vote-btn {
+  width: 24px; height: 22px; border-radius: 4px;
+  border: 1px solid var(--border2); background: transparent;
+  font-size: 0.7rem; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+}
+.mockup-vote-btn.up { background: rgba(83,245,213,0.15); border-color: var(--accent); color: var(--accent); }
+.mockup-score { font-family: var(--f-display); font-size: 1rem; font-weight: 700; color: var(--accent); }
+
+.mockup-body { flex: 1; }
+.mockup-tags { display: flex; gap: 0.4rem; margin-bottom: 0.45rem; }
+.mockup-tag {
+  font-family: var(--f-mono); font-size: 0.52rem;
+  letter-spacing: 0.1em; padding: 0.13rem 0.45rem;
+  border: 1px solid var(--border2); border-radius: 3px;
+  color: var(--text-muted);
+}
+.mockup-tag.t1 { color: var(--accent); border-color: var(--accent); }
+.mockup-title {
+  font-family: var(--f-display); font-size: 1rem; font-weight: 600;
+  color: var(--text); line-height: 1.3; margin-bottom: 0.2rem;
+}
+.mockup-desc {
+  font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;
+}
+
+.mockup-prompt {
+  margin-top: 0.9rem; padding: 0.75rem 0.9rem;
+  background: var(--panel); border-radius: 6px;
+  border-left: 2px solid var(--accent);
+  font-family: var(--f-mono); font-size: 0.65rem;
+  line-height: 1.55; color: var(--text-muted);
+  white-space: pre-wrap;
+}
+
+.mockup-stars { margin-top: 0.7rem; display: flex; gap: 0.15rem; }
+.mockup-star { color: var(--gold); font-size: 0.7rem; }
+.mockup-star.dim { color: var(--text-dim); }
+
+/* ══ PEDAGOGY ══ */
+.pedagogy {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 4rem 2rem;
+  transition: background 0.35s;
+}
+
+.section-wrap { max-width: 1160px; margin: 0 auto; }
+
+.section-eyebrow {
+  font-family: var(--f-mono); font-size: 0.62rem;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.6rem;
+}
+
+.section-title {
+  font-family: var(--f-display); font-size: clamp(1.7rem, 3vw, 2.5rem);
+  font-weight: 700; letter-spacing: -0.02em; color: var(--text);
+  margin-bottom: 0.6rem; line-height: 1.1;
+}
+.section-title em { font-style: italic; color: var(--accent); font-weight: 600; }
+
+.section-desc {
+  font-size: 0.95rem; color: var(--text-muted); line-height: 1.7;
+  max-width: 620px; margin-bottom: 2.5rem;
+}
+
+.pedagogy-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem;
+  margin-bottom: 2.5rem;
+}
+
+.p-card {
+  background: var(--surface); border-radius: 12px;
+  border: 1px solid var(--border); overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+  display: flex; flex-direction: column;
+}
+.p-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+
+.p-card-header {
+  padding: 1.2rem 1.4rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.p-type-badge {
+  font-family: var(--f-mono); font-size: 0.6rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.25rem 0.7rem; border-radius: 3px;
+  font-weight: 500; display: inline-block; margin-bottom: 0.7rem;
+}
+.badge-one { background: rgba(245,200,66,0.15); color: var(--gold); border: 1px solid rgba(245,200,66,0.3); }
+.badge-few { background: rgba(83,245,213,0.12); color: var(--accent); border: 1px solid rgba(83,245,213,0.3); }
+.badge-cot { background: rgba(3,170,162,0.15); color: var(--c-teal); border: 1px solid rgba(3,170,162,0.4); }
+[data-theme="light"] .badge-cot { color: var(--c-dark); border-color: rgba(0,68,61,0.4); }
+
+.p-card-title {
+  font-family: var(--f-display); font-size: 1.15rem;
+  font-weight: 600; color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.p-card-body { padding: 1.2rem 1.4rem; flex: 1; display: flex; flex-direction: column; }
+
+.p-def {
+  font-size: 0.84rem; color: var(--text-muted); line-height: 1.65;
+  margin-bottom: 1rem;
+}
+
+.p-when-title {
+  font-family: var(--f-mono); font-size: 0.58rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 0.5rem;
+}
+
+.p-when-list { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+
+.p-when-item {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  font-size: 0.78rem; color: var(--text-muted); line-height: 1.45;
+}
+.p-when-item::before {
+  content: '→'; color: var(--accent); flex-shrink: 0;
+  font-family: var(--f-mono); font-size: 0.75rem; margin-top: 0.05rem;
+}
+
+.p-example {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 6px; padding: 0.85rem 1rem;
+  border-left: 3px solid var(--accent);
+  margin-top: auto;
+}
+.p-example-label {
+  font-family: var(--f-mono); font-size: 0.55rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.5rem;
+}
+.p-example pre {
+  font-family: var(--f-mono); font-size: 0.66rem;
+  line-height: 1.6; color: var(--text-muted);
+  white-space: pre-wrap; word-break: break-word;
+}
+
+/* ══ MAIN LIBRARY ══ */
+.main { max-width: 1160px; margin: 0 auto; padding: 3.5rem 2rem 5rem; }
+
+.main-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem; margin-bottom: 0.5rem;
+}
+
+.main-title {
+  font-family: var(--f-display); font-size: 1.7rem;
+  font-weight: 700; letter-spacing: -0.02em; color: var(--text);
+}
+.main-title em { font-style: italic; color: var(--accent); font-weight: 600; }
+
+.main-sub {
+  font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem;
+}
+
+.controls {
+  display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+  margin-bottom: 2rem;
+}
+
+.filter-btn {
+  font-family: var(--f-mono); font-size: 0.62rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.32rem 0.85rem; border-radius: 4px;
+  border: 1px solid var(--border2);
+  background: transparent; color: var(--text-muted);
+  cursor: pointer; transition: all 0.18s;
+}
+.filter-btn:hover { color: var(--text); border-color: var(--accent); }
+.filter-btn.active {
+  background: rgba(83,245,213,0.12); color: var(--accent);
+  border-color: var(--accent);
+}
+[data-theme="light"] .filter-btn.active { background: rgba(3,170,162,0.12); }
+
+.search-wrap {
+  margin-left: auto; position: relative;
+}
+.search-wrap::before {
+  content: '⌕'; position: absolute; left: 0.7rem; top: 50%;
+  transform: translateY(-50%); color: var(--text-dim);
+  font-size: 0.9rem; pointer-events: none;
+}
+.search-input {
+  font-family: var(--f-mono); font-size: 0.72rem;
+  padding: 0.35rem 0.8rem 0.35rem 1.8rem;
+  border-radius: 4px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text);
+  outline: none; width: 200px; transition: border-color 0.2s;
+}
+.search-input::placeholder { color: var(--text-dim); }
+.search-input:focus { border-color: var(--accent); }
+
+.sort-select {
+  font-family: var(--f-mono); font-size: 0.62rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.35rem 0.7rem; border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-muted);
+  cursor: pointer; outline: none;
+}
+
+.main-grid {
+  display: grid; grid-template-columns: 1fr 290px; gap: 2rem;
+  align-items: start;
+}
+
+/* ══ PROMPT CARDS ══ */
+.feed { display: flex; flex-direction: column; gap: 1rem; }
+
+.pcard {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  animation: slideUp 0.4s ease both;
+}
+.pcard:hover {
+  border-color: var(--border2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pcard.starter::before {
+  content: '🌱 PROMPT DE ARRANQUE · POR VALIDAR PELA EQUIPA';
+  display: block; font-family: var(--f-mono); font-size: 0.55rem;
+  letter-spacing: 0.18em; color: var(--gold);
+  background: rgba(245,200,66,0.06);
+  padding: 0.3rem 1.3rem; border-bottom: 1px solid rgba(245,200,66,0.18);
+}
+
+.pcard.gold-tier::before {
+  content: '★ DESTAQUE DA EQUIPA';
+  display: block; font-family: var(--f-mono); font-size: 0.55rem;
+  letter-spacing: 0.2em; color: var(--accent);
+  background: rgba(83,245,213,0.06);
+  padding: 0.3rem 1.3rem; border-bottom: 1px solid rgba(83,245,213,0.18);
+}
+
+.pcard-inner {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1.1rem 1.3rem 0.9rem;
+}
+
+.vote-col {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.15rem; min-width: 38px; flex-shrink: 0; padding-top: 0.1rem;
+}
+
+.vote-btn {
+  width: 30px; height: 26px; border-radius: 4px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text-muted); font-size: 0.8rem;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.vote-btn:hover { background: rgba(83,245,213,0.1); border-color: var(--accent); color: var(--accent); }
+.vote-btn.voted-up { background: rgba(83,245,213,0.15); border-color: var(--accent); color: var(--accent); }
+.vote-btn.voted-down { background: rgba(255,140,90,0.1); border-color: var(--warn); color: var(--warn); }
+
+.vote-score {
+  font-family: var(--f-display); font-size: 0.95rem; font-weight: 700;
+  color: var(--text); min-width: 24px; text-align: center; line-height: 1;
+}
+.vote-score.pos { color: var(--accent); }
+.vote-score.neg { color: var(--warn); }
+
+.stars { display: flex; gap: 0.1rem; margin-top: 0.3rem; }
+.star { font-size: 0.7rem; cursor: pointer; transition: transform 0.1s; color: var(--text-dim); }
+.star:hover, .star.lit { color: var(--gold); }
+.star:hover { transform: scale(1.3); }
+
+.pcard-body { flex: 1; min-width: 0; }
+
+.pcard-meta {
+  display: flex; align-items: center; gap: 0.45rem;
+  flex-wrap: wrap; margin-bottom: 0.4rem;
+}
+
+.cat-tag {
+  font-family: var(--f-mono); font-size: 0.56rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.18rem 0.55rem; border-radius: 3px; border: 1px solid;
+}
+.cat-tag.propostas     { border-color: rgba(83,245,213,0.4);  color: var(--accent); }
+.cat-tag.apresentacoes { border-color: rgba(245,200,66,0.4);  color: var(--gold); }
+.cat-tag.relatorios    { border-color: rgba(3,170,162,0.5);   color: var(--c-teal); }
+.cat-tag.dados         { border-color: rgba(255,140,90,0.5);  color: var(--warn); }
+.cat-tag.excel         { border-color: rgba(120,200,80,0.5);  color: #88c850; }
+.cat-tag.comunicacao   { border-color: rgba(200,100,230,0.4); color: #c878e6; }
+.cat-tag.outro         { border-color: rgba(150,150,150,0.4); color: var(--text-muted); }
+
+[data-theme="light"] .cat-tag.relatorios { color: var(--c-dark); border-color: rgba(0,68,61,0.5); }
+
+.type-chip {
+  font-family: var(--f-mono); font-size: 0.55rem;
+  letter-spacing: 0.08em; padding: 0.15rem 0.45rem;
+  border-radius: 20px;
+}
+.type-chip.one { background: rgba(245,200,66,0.1); color: var(--gold); border: 1px solid rgba(245,200,66,0.25); }
+.type-chip.few { background: rgba(83,245,213,0.1); color: var(--accent); border: 1px solid rgba(83,245,213,0.25); }
+.type-chip.cot { background: rgba(3,170,162,0.12); color: var(--c-teal); border: 1px solid rgba(3,170,162,0.3); }
+[data-theme="light"] .type-chip.cot { color: var(--c-dark); }
+
+.author-tag {
+  font-family: var(--f-mono); font-size: 0.58rem;
+  color: var(--text-dim); margin-left: auto;
+}
+
+.pcard-title {
+  font-family: var(--f-display); font-size: 1.08rem;
+  font-weight: 600; color: var(--text); line-height: 1.25;
+  margin-bottom: 0.3rem; letter-spacing: -0.01em;
+}
+
+.pcard-desc {
+  font-size: 0.82rem; color: var(--text-muted); line-height: 1.55;
+  margin-bottom: 0.4rem;
+}
+
+.placeholder-count {
+  font-family: var(--f-mono); font-size: 0.6rem;
+  color: var(--text-dim); display: inline-flex; align-items: center;
+  gap: 0.3rem; padding: 0.15rem 0.45rem;
+  background: var(--panel); border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+/* prompt preview area */
+.pcard-preview {
+  background: var(--panel); border-top: 1px solid var(--border);
+  padding: 0.9rem 1.3rem; max-height: 110px; overflow: hidden;
+  position: relative; transition: max-height 0.4s ease;
+}
+.pcard-preview.open { max-height: 800px; }
+.pcard-preview::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
+  background: linear-gradient(transparent, var(--panel));
+  pointer-events: none; transition: opacity 0.3s;
+}
+.pcard-preview.open::after { opacity: 0; }
+
+.pcard-preview pre {
+  font-family: var(--f-mono); font-size: 0.7rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  white-space: pre-wrap; word-break: break-word;
+}
+
+.lang-switcher {
+  position: sticky; top: 0;
+  display: flex; gap: 0.3rem;
+  padding-bottom: 0.6rem;
+  z-index: 1;
+  background: linear-gradient(to bottom, var(--panel) 80%, transparent);
+}
+
+.lang-pill {
+  font-family: var(--f-mono); font-size: 0.55rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.2rem 0.55rem; border-radius: 3px;
+  border: 1px solid var(--border2); background: var(--surface);
+  color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+}
+.lang-pill:hover { color: var(--text); }
+.lang-pill.active { background: var(--accent); color: var(--c-dark); border-color: var(--accent); }
+
+/* output example */
+.output-example {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 0.9rem 1.3rem;
+}
+.output-label {
+  font-family: var(--f-mono); font-size: 0.58rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.5rem;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.output-content {
+  font-size: 0.78rem; color: var(--text-muted); line-height: 1.6;
+  font-style: italic;
+  padding-left: 0.7rem; border-left: 2px solid var(--accent);
+}
+.output-link {
+  color: var(--accent); text-decoration: none; font-family: var(--f-mono);
+  font-size: 0.7rem; display: inline-flex; align-items: center; gap: 0.3rem;
+}
+.output-link:hover { text-decoration: underline; }
+
+/* card footer */
+.pcard-footer {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.6rem 1.3rem; border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  font-family: var(--f-mono); font-size: 0.6rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.3rem 0.75rem; border-radius: 3px;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+}
+.btn-sm:hover { color: var(--text); border-color: var(--accent); }
+.btn-sm.copied { color: var(--accent); border-color: var(--accent); }
+.btn-sm.report { margin-left: auto; color: var(--text-dim); border-color: var(--border); }
+.btn-sm.report:hover { color: var(--warn); border-color: var(--warn); }
+
+.rating-info {
+  font-family: var(--f-mono); font-size: 0.6rem;
+  color: var(--text-dim);
+}
+
+/* ══ SUBMIT SECTION ══ */
+.submit-section {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 4rem 2rem; transition: background 0.35s;
+}
+
+.submit-inner {
+  max-width: 1160px; margin: 0 auto;
+  display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 3rem; align-items: start;
+}
+
+.submit-pitch-title {
+  font-family: var(--f-display); font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;
+  color: var(--text); margin-bottom: 1rem;
+}
+.submit-pitch-title em { font-style: italic; color: var(--accent); font-weight: 600; }
+
+.submit-pitch-desc {
+  font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.incentive-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.incentive-item {
+  display: flex; align-items: flex-start; gap: 0.7rem;
+  font-size: 0.83rem; color: var(--text-muted); line-height: 1.5;
+}
+.incentive-icon {
+  width: 30px; height: 30px; border-radius: 6px;
+  background: rgba(83,245,213,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; flex-shrink: 0;
+}
+
+.submit-form {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+
+.submit-form-header {
+  padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--border);
+  font-family: var(--f-mono); font-size: 0.65rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent);
+}
+
+.submit-form-body {
+  padding: 1.3rem 1.4rem; display: flex; flex-direction: column; gap: 0.9rem;
+  max-height: 600px; overflow-y: auto;
+}
+
+.fg { display: flex; flex-direction: column; gap: 0.4rem; }
+.fg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+
+.fl {
+  font-family: var(--f-mono); font-size: 0.6rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+}
+.fl-hint { font-family: var(--f-body); font-size: 0.7rem; color: var(--text-dim); text-transform: none; letter-spacing: 0; }
+
+.fi, .fs, .ft {
+  font-family: var(--f-body); font-size: 0.85rem;
+  padding: 0.55rem 0.8rem; border-radius: 5px;
+  border: 1px solid var(--border); background: var(--panel);
+  color: var(--text); outline: none; transition: border-color 0.2s;
+}
+.fi:focus, .fs:focus, .ft:focus { border-color: var(--accent); }
+.fi::placeholder, .ft::placeholder { color: var(--text-dim); }
+.ft { font-family: var(--f-mono); font-size: 0.72rem; line-height: 1.6; resize: vertical; min-height: 120px; }
+.ft.small { min-height: 70px; }
+
+.privacy-note {
+  background: rgba(255,140,90,0.06);
+  border: 1px solid rgba(255,140,90,0.22);
+  border-radius: 5px; padding: 0.7rem 0.9rem;
+  font-size: 0.75rem; color: var(--text-muted); line-height: 1.55;
+}
+.privacy-note strong { color: var(--warn); }
+
+.quality-note {
+  background: rgba(83,245,213,0.06); border: 1px solid rgba(83,245,213,0.22);
+  border-radius: 5px; padding: 0.7rem 0.9rem;
+  font-size: 0.75rem; color: var(--text-muted); line-height: 1.55;
+}
+.quality-note strong { color: var(--accent); }
+
+.submit-form-footer {
+  padding: 0.9rem 1.4rem; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
+}
+
+.export-btn {
+  font-family: var(--f-mono); font-size: 0.58rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.4rem 0.8rem; border-radius: 4px;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+}
+.export-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ══ SIDEBAR ══ */
+.sidebar { display: flex; flex-direction: column; gap: 1.2rem; position: sticky; top: 76px; }
+
+.sbox {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+
+.sbox-head {
+  padding: 0.8rem 1.1rem; border-bottom: 1px solid var(--border);
+  font-family: var(--f-mono); font-size: 0.6rem;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+}
+
+.lb-row {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.6rem 1.1rem; border-bottom: 1px solid rgba(83,245,213,0.06);
+  cursor: pointer; transition: background 0.15s;
+}
+.lb-row:hover { background: rgba(83,245,213,0.04); }
+.lb-row:last-child { border-bottom: none; }
+
+.lb-rank {
+  font-family: var(--f-mono); font-size: 0.65rem; color: var(--text-dim); min-width: 18px;
+}
+.lb-rank.top { color: var(--gold); font-weight: 500; }
+
+.lb-info { flex: 1; min-width: 0; }
+.lb-title { font-size: 0.76rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+.lb-auth { font-family: var(--f-mono); font-size: 0.57rem; color: var(--text-dim); }
+.lb-pts { font-family: var(--f-display); font-size: 0.85rem; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+.stat-cell {
+  background: var(--surface); padding: 0.9rem 1rem;
+  display: flex; flex-direction: column; gap: 0.2rem;
+}
+.stat-val { font-family: var(--f-display); font-size: 1.4rem; font-weight: 700; color: var(--text); }
+.stat-val.accent { color: var(--accent); }
+.stat-val.gold { color: var(--gold); }
+.stat-lbl { font-family: var(--f-mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+
+.act-item {
+  display: flex; gap: 0.55rem; align-items: flex-start;
+  padding: 0.55rem 1.1rem; border-bottom: 1px solid rgba(83,245,213,0.06);
+  font-size: 0.73rem; color: var(--text-muted); line-height: 1.45;
+}
+.act-item:last-child { border-bottom: none; }
+.act-icon { font-size: 0.85rem; flex-shrink: 0; margin-top: 0.05rem; }
+.act-time { font-family: var(--f-mono); font-size: 0.58rem; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
+
+/* ══ TOAST & FAB ══ */
+.toast {
+  position: fixed; bottom: 5.5rem; left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--panel); border: 1px solid var(--accent);
+  color: var(--accent); font-family: var(--f-mono); font-size: 0.7rem;
+  letter-spacing: 0.08em; padding: 0.55rem 1.3rem;
+  border-radius: 20px; opacity: 0; transition: all 0.28s; z-index: 600;
+  pointer-events: none; box-shadow: 0 4px 20px rgba(3,170,162,0.25);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.fab {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 200;
+  background: linear-gradient(135deg, var(--c-teal), var(--c-mint));
+  color: var(--c-dark); border: none; border-radius: 50px;
+  padding: 0.8rem 1.6rem;
+  font-family: var(--f-mono); font-size: 0.7rem;
+  font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; box-shadow: 0 4px 20px rgba(3,170,162,0.4);
+  transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;
+}
+.fab:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(3,170,162,0.55); }
+
+.empty {
+  text-align: center; padding: 3rem 2rem;
+  color: var(--text-dim); font-size: 0.85rem;
+  background: var(--surface); border: 1px dashed var(--border2);
+  border-radius: 10px;
+}
+.empty-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
+
+/* ══ WELCOME MODAL ══ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,20,18,0.88);
+  backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.modal-overlay.show { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 16px; width: 100%; max-width: 540px;
+  max-height: 90vh; overflow-y: auto;
+  transform: scale(0.95) translateY(10px); transition: transform 0.3s;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.modal-overlay.show .modal { transform: scale(1) translateY(0); }
+
+.welcome-progress {
+  display: flex; gap: 0.3rem; padding: 1.3rem 1.5rem 0;
+}
+.wp-dot { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background 0.3s; }
+.wp-dot.active { background: var(--accent); }
+.wp-dot.done { background: var(--accent2); }
+
+.welcome-slide { padding: 2rem 2rem 1.5rem; min-height: 340px; display: flex; flex-direction: column; }
+
+.welcome-slide.hidden { display: none; }
+
+.welcome-emoji { font-size: 2.6rem; margin-bottom: 1rem; }
+
+.welcome-title {
+  font-family: var(--f-display); font-size: 1.65rem;
+  font-weight: 700; letter-spacing: -0.02em; color: var(--text);
+  margin-bottom: 0.8rem; line-height: 1.15;
+}
+.welcome-title em { font-style: italic; color: var(--accent); }
+
+.welcome-body {
+  font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;
+  flex: 1;
+}
+.welcome-body p { margin-bottom: 0.8rem; }
+.welcome-body strong { color: var(--text); }
+
+.welcome-tips { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.8rem; }
+.welcome-tip {
+  display: flex; gap: 0.7rem; align-items: flex-start;
+  background: var(--panel); padding: 0.7rem 0.9rem;
+  border-radius: 6px; border: 1px solid var(--border);
+}
+.welcome-tip-icon { font-size: 1rem; flex-shrink: 0; }
+.welcome-tip-text { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+.welcome-footer {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border);
+}
+
+.welcome-skip {
+  font-family: var(--f-mono); font-size: 0.62rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  background: transparent; color: var(--text-dim);
+  border: none; cursor: pointer; transition: color 0.15s;
+}
+.welcome-skip:hover { color: var(--text-muted); }
+
+.welcome-next {
+  font-family: var(--f-mono); font-size: 0.7rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.55rem 1.3rem;
+  background: linear-gradient(135deg, var(--c-teal), var(--c-mint));
+  color: var(--c-dark); border: none; border-radius: 5px;
+  cursor: pointer; font-weight: 600; transition: transform 0.15s;
+}
+.welcome-next:hover { transform: translateY(-1px); }
+
+@media (max-width: 880px) {
+  .hero, .pedagogy-grid, .submit-inner, .main-grid { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .sidebar { position: static; }
+  nav { padding: 0 1rem; }
+  .nav-left .workspace-tag { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">2C</div>
+      <span class="nav-logo-text">Prompt<span>2C</span></span>
+    </div>
+    <span class="workspace-tag">Get2C · Consultoria</span>
+  </div>
+  <div class="nav-right">
+    <span class="db-status" id="db-status">a ligar…</span>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Modo claro/escuro"></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <p class="hero-eyebrow">Biblioteca colaborativa de prompts</p>
+    <h1>Prompts que<br><em>elevam</em> o nosso trabalho</h1>
+    <p class="hero-desc">Uma biblioteca viva, construída pela equipa Get2C. Partilha os prompts que te dão resultados de excelência. Vota nos melhores. Aprende com os colegas.</p>
+    <div class="hero-cta-row">
+      <button class="btn-primary" onclick="scrollToLibrary()">Ver biblioteca →</button>
+      <button class="btn-ghost" onclick="scrollToLearn()">Como criar prompts</button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="mockup-card">
+      <div class="mockup-badge">★ Exemplo de prompt na biblioteca</div>
+      <div class="mockup-header">
+        <div class="mockup-votes">
+          <button class="mockup-vote-btn up">▲</button>
+          <span class="mockup-score">+12</span>
+          <button class="mockup-vote-btn">▼</button>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-tags">
+            <span class="mockup-tag t1">Propostas</span>
+            <span class="mockup-tag">few-shot</span>
+          </div>
+          <div class="mockup-title">Scope of Work no estilo da empresa</div>
+          <div class="mockup-desc">Replica o estilo de SOW da empresa usando 2 exemplos como referência.</div>
+        </div>
+      </div>
+      <div class="mockup-prompt">You are a senior consultant drafting scopes of work. Study the two examples below and generate a new SOW in the exact same style…</div>
+      <div class="mockup-stars">
+        <span class="mockup-star">★</span><span class="mockup-star">★</span><span class="mockup-star">★</span><span class="mockup-star">★</span><span class="mockup-star dim">★</span>
+        <span style="font-family:var(--f-mono);font-size:0.6rem;color:var(--text-dim);margin-left:0.5rem">4.2 · 8 avaliações</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PEDAGOGY -->
+<section class="pedagogy" id="learn">
+  <div class="section-wrap">
+    <p class="section-eyebrow">Guia rápido</p>
+    <h2 class="section-title">Três técnicas para <em>prompts melhores</em></h2>
+    <p class="section-desc">Saber escolher a técnica certa é o que separa resultados medíocres de resultados de excelência. Estas três abordagens cobrem 95% dos casos de uso na consultoria.</p>
+
+    <div class="pedagogy-grid">
+
+      <div class="p-card">
+        <div class="p-card-header">
+          <span class="p-type-badge badge-one">One-Shot</span>
+          <div class="p-card-title">Instrução directa</div>
+        </div>
+        <div class="p-card-body">
+          <p class="p-def">Dás ao modelo <strong>uma única instrução clara</strong> com contexto detalhado. Sem exemplos. Rápido e eficaz quando a tarefa é bem definida.</p>
+          <p class="p-when-title">Quando usar →</p>
+          <div class="p-when-list">
+            <div class="p-when-item">Tarefas com formato universal (resumo, email, NTS)</div>
+            <div class="p-when-item">Quando o resultado esperado é óbvio</div>
+            <div class="p-when-item">Velocidade > estilo exacto</div>
+            <div class="p-when-item">Primeira iteração — refinas depois</div>
+          </div>
+          <div class="p-example">
+            <p class="p-example-label">Exemplo</p>
+            <pre>You are a senior environmental consultant.
+Write an executive summary for an EIA
+proposal for a wind farm in Natura 2000
+area. Client: EDP. Timeline: 8 months.
+Tone: authoritative. Length: 280-320 words.</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="p-card-header">
+          <span class="p-type-badge badge-few">Few-Shot</span>
+          <div class="p-card-title">Por exemplos</div>
+        </div>
+        <div class="p-card-body">
+          <p class="p-def">Forneces <strong>2-3 exemplos do resultado que queres</strong> antes de pedir o novo. O modelo aprende o teu estilo e replica-o com precisão.</p>
+          <p class="p-when-title">Quando usar →</p>
+          <div class="p-when-list">
+            <div class="p-when-item">Replicar estilo exacto da empresa</div>
+            <div class="p-when-item">Estruturas técnicas específicas</div>
+            <div class="p-when-item">Vocabulário regulatório preciso</div>
+            <div class="p-when-item">Formatos repetitivos em projectos</div>
+          </div>
+          <div class="p-example">
+            <p class="p-example-label">Exemplo</p>
+            <pre>Study these examples and generate a new
+SOW in the same format.
+
+--- EXAMPLE 1 ---
+Project: Coastal restoration, Galicia
+1. Baseline survey — Weeks 1-4
+2. Stakeholder consultation — Weeks 3-5
+...
+
+--- NEW PROJECT ---
+Project: [NAME]</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="p-card-header">
+          <span class="p-type-badge badge-cot">Chain-of-Thought</span>
+          <div class="p-card-title">Raciocínio passo-a-passo</div>
+        </div>
+        <div class="p-card-body">
+          <p class="p-def">Pedes ao modelo para <strong>pensar em voz alta antes de responder</strong>. Ideal para análises complexas onde queres ver a lógica, não só a conclusão.</p>
+          <p class="p-when-title">Quando usar →</p>
+          <div class="p-when-list">
+            <div class="p-when-item">Avaliações de conformidade regulatória</div>
+            <div class="p-when-item">Análises de risco multi-factor</div>
+            <div class="p-when-item">Decisões com múltiplos critérios</div>
+            <div class="p-when-item">Quando precisas defender a conclusão</div>
+          </div>
+          <div class="p-example">
+            <p class="p-example-label">Exemplo</p>
+            <pre>You are a senior consultant. Analyse this
+compliance scenario step by step:
+
+1. First, identify all applicable regulations
+2. Then, assess current state vs each requirement
+3. Then, rank gaps by severity and effort
+4. Finally, propose a prioritised action plan
+
+Explain your reasoning at each step.</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN LIBRARY -->
+<div class="main" id="library">
+  <div class="main-header">
+    <h2 class="main-title">Biblioteca de <em>prompts</em></h2>
+  </div>
+  <p class="main-sub">Todos os prompts são <strong>templates</strong> — adapta os campos <code style="background:var(--panel);padding:0.1rem 0.35rem;border-radius:3px;font-family:var(--f-mono);font-size:0.78em;color:var(--accent)">[ASSIM]</code> ao contexto do teu projecto antes de usar.</p>
+
+  <div class="controls">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+    <button class="filter-btn" onclick="setFilter('propostas',this)">Propostas</button>
+    <button class="filter-btn" onclick="setFilter('apresentacoes',this)">Apresentações</button>
+    <button class="filter-btn" onclick="setFilter('relatorios',this)">Relatórios</button>
+    <button class="filter-btn" onclick="setFilter('dados',this)">Dados</button>
+    <button class="filter-btn" onclick="setFilter('excel',this)">Excel</button>
+    <button class="filter-btn" onclick="setFilter('comunicacao',this)">Comunicação</button>
+    <select class="sort-select" onchange="setSort(this.value)">
+      <option value="score">↑ Mais votados</option>
+      <option value="newest">⏱ Mais recentes</option>
+      <option value="stars">★ Melhor rating</option>
+    </select>
+    <div class="search-wrap">
+      <input class="search-input" type="text" placeholder="Pesquisar…" oninput="setSearch(this.value)">
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="feed" id="feed"></div>
+    <aside class="sidebar">
+      <div class="sbox">
+        <div class="sbox-head">🏆 Leaderboard</div>
+        <div id="leaderboard"></div>
+      </div>
+      <div class="sbox">
+        <div class="stat-grid">
+          <div class="stat-cell"><div class="stat-val accent" id="s-total">0</div><div class="stat-lbl">Prompts</div></div>
+          <div class="stat-cell"><div class="stat-val gold" id="s-contrib">0</div><div class="stat-lbl">Autores</div></div>
+          <div class="stat-cell"><div class="stat-val" id="s-votes">0</div><div class="stat-lbl">Votos</div></div>
+          <div class="stat-cell"><div class="stat-val" id="s-avg">—</div><div class="stat-lbl">Rating médio</div></div>
+        </div>
+      </div>
+      <div class="sbox">
+        <div class="sbox-head">⚡ Actividade</div>
+        <div id="activity-feed"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<section class="submit-section" id="submit">
+  <div class="submit-inner">
+    <div>
+      <h2 class="submit-pitch-title">O teu próximo<br>prompt pode ser<br><em>o melhor da equipa</em></h2>
+      <p class="submit-pitch-desc">Encontraste um prompt que produziu um resultado acima da média? Partilha-o aqui. A equipa testa, vota, e o melhor sobe ao topo.</p>
+      <div class="incentive-list">
+        <div class="incentive-item">
+          <div class="incentive-icon">🎯</div>
+          <span>Só partilha prompts que já testaste num caso real</span>
+        </div>
+        <div class="incentive-item">
+          <div class="incentive-icon">🌍</div>
+          <span>Escreve o prompt em <strong>inglês</strong> — poupa tokens e gera melhores resultados</span>
+        </div>
+        <div class="incentive-item">
+          <div class="incentive-icon">🔄</div>
+          <span>Usa placeholders <code style="background:var(--panel);padding:0.05rem 0.3rem;border-radius:3px;font-family:var(--f-mono);font-size:0.85em;color:var(--accent)">[ASSIM]</code> para facilitar reutilização</span>
+        </div>
+        <div class="incentive-item">
+          <div class="incentive-icon">📸</div>
+          <span>Junta um exemplo do resultado (texto ou link)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-form">
+      <div class="submit-form-header">+ Submeter novo prompt</div>
+      <div class="submit-form-body">
+
+        <div class="privacy-note">
+          <strong>⚠ Privacidade:</strong> não incluas nomes de clientes reais, dados confidenciais ou informação sensível. Usa <code style="font-family:var(--f-mono);font-size:0.9em">[CLIENTE]</code> em vez de nomes específicos.
+        </div>
+
+        <div class="fg-row">
+          <div class="fg">
+            <label class="fl">O teu nome</label>
+            <input class="fi" id="f-author" type="text" placeholder="ex: Ana Silva">
+          </div>
+          <div class="fg">
+            <label class="fl">Categoria</label>
+            <select class="fs" id="f-cat">
+              <option value="propostas">Propostas</option>
+              <option value="apresentacoes">Apresentações</option>
+              <option value="relatorios">Relatórios</option>
+              <option value="dados">Análise de Dados</option>
+              <option value="excel">Excel & Sheets</option>
+              <option value="comunicacao">Comunicação Cliente</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fg-row">
+          <div class="fg">
+            <label class="fl">Título do prompt</label>
+            <input class="fi" id="f-title" type="text" placeholder="Descritivo e claro">
+          </div>
+          <div class="fg">
+            <label class="fl">Técnica</label>
+            <select class="fs" id="f-type">
+              <option value="one">One-Shot</option>
+              <option value="few">Few-Shot</option>
+              <option value="cot">Chain-of-Thought</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Descrição <span class="fl-hint">— em português, o que faz?</span></label>
+          <input class="fi" id="f-desc" type="text" placeholder="ex: Gera uma narrativa de honorários sem soar defensivo">
+        </div>
+
+        <div class="fg">
+          <label class="fl">O prompt <span class="fl-hint">— em inglês, com [PLACEHOLDERS]</span></label>
+          <textarea class="ft" id="f-prompt" placeholder="You are a senior consultant…"></textarea>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Exemplo de resultado <span class="fl-hint">— opcional, mas recomendado</span></label>
+          <textarea class="ft small" id="f-output" placeholder="Cola um excerto do output gerado, ou descreve o resultado em 2-3 frases…"></textarea>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Link externo <span class="fl-hint">— opcional (SharePoint, Drive…)</span></label>
+          <input class="fi" id="f-link" type="text" placeholder="https://…">
+        </div>
+
+        <div class="quality-note">
+          <strong>Critério de qualidade:</strong> só submete prompts cujo resultado usarias num documento real para um cliente.
+        </div>
+      </div>
+      <div class="submit-form-footer">
+        <button class="export-btn" onclick="exportBackup()">⤓ Exportar backup</button>
+        <button class="btn-primary" onclick="submitPrompt()">Publicar →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<button class="fab" onclick="scrollToSubmit()">+ Submeter Prompt</button>
+<div class="toast" id="toast"></div>
+
+<!-- WELCOME MODAL -->
+<div class="modal-overlay" id="welcome-modal">
+  <div class="modal">
+    <div class="welcome-progress">
+      <div class="wp-dot active" id="wp1"></div>
+      <div class="wp-dot" id="wp2"></div>
+      <div class="wp-dot" id="wp3"></div>
+      <div class="wp-dot" id="wp4"></div>
+    </div>
+
+    <div class="welcome-slide" id="ws1">
+      <div class="welcome-emoji">🌱</div>
+      <h2 class="welcome-title">Bem-vindo ao <em>Prompt2C</em></h2>
+      <div class="welcome-body">
+        <p>Esta é a <strong>biblioteca colaborativa de prompts</strong> da equipa Get2C — um espaço para partilhar, votar e descobrir os prompts que produzem resultados de excelência.</p>
+        <p>Quanto melhor cada um de nós dominar o uso da IA, melhor o trabalho que entregamos aos clientes. Esta ferramenta acelera essa aprendizagem colectiva.</p>
+      </div>
+    </div>
+
+    <div class="welcome-slide hidden" id="ws2">
+      <div class="welcome-emoji">📚</div>
+      <h2 class="welcome-title">Templates <em>prontos a adaptar</em></h2>
+      <div class="welcome-body">
+        <p>Todos os prompts da biblioteca são <strong>templates</strong>. Cada um tem campos marcados <code style="background:var(--panel);padding:0.1rem 0.35rem;border-radius:3px;font-family:var(--f-mono);font-size:0.85em;color:var(--accent)">[ASSIM]</code> que deves adaptar ao contexto do teu projecto antes de usar.</p>
+        <div class="welcome-tips">
+          <div class="welcome-tip">
+            <span class="welcome-tip-icon">📋</span>
+            <span class="welcome-tip-text"><strong>Copia</strong> — botão "Copiar" copia o prompt completo</span>
+          </div>
+          <div class="welcome-tip">
+            <span class="welcome-tip-icon">✏️</span>
+            <span class="welcome-tip-text"><strong>Adapta</strong> — substitui os <code style="font-family:var(--f-mono);font-size:0.9em;color:var(--accent)">[CAMPOS]</code> pelo teu contexto real</span>
+          </div>
+          <div class="welcome-tip">
+            <span class="welcome-tip-icon">🚀</span>
+            <span class="welcome-tip-text"><strong>Usa</strong> — cola no Claude, Cowork ou ChatGPT</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="welcome-slide hidden" id="ws3">
+      <div class="welcome-emoji">⬆️</div>
+      <h2 class="welcome-title">Vota nos <em>melhores</em></h2>
+      <div class="welcome-body">
+        <p>Testaste um prompt? Diz à equipa se funcionou:</p>
+        <div class="welcome-tips">
+          <div class="welcome-tip">
+            <span class="welcome-tip-icon">⬆️</span>
+            <span class="welcome-tip-text"><strong>Upvote</strong> se o resultado foi excelente</span>
+          </div>
+          <div class="welcome-tip">
+            <span class="welcome-tip-icon">⬇️</span>
+            <span class="welcome-tip-text"><strong>Downvote</strong> se não funcionou ou ficou aquém</span>
+          </div>
+          <div class="welcome-tip">
+            <span class="welcome-tip-icon">★</span>
+            <span class="welcome-tip-text"><strong>Avalia com estrelas</strong> a qualidade do output (1 a 5)</span>
+          </div>
+        </div>
+        <p style="margin-top:1rem;font-size:0.82rem">Os prompts com melhor pontuação sobem ao topo do leaderboard — assim toda a gente vê os mais eficazes primeiro.</p>
+      </div>
+    </div>
+
+    <div class="welcome-slide hidden" id="ws4">
+      <div class="welcome-emoji">🚀</div>
+      <h2 class="welcome-title">Partilha os <em>teus prompts</em></h2>
+      <div class="welcome-body">
+        <p>A biblioteca cresce com a equipa. Sempre que encontrares um prompt que funcione mesmo bem, partilha-o no formulário em baixo.</p>
+        <div class="welcome-tips">
+          <div class="welcome-tip">
+            <span class="welcome-tip-icon">🌍</span>
+            <span class="welcome-tip-text"><strong>Em inglês</strong> — gera melhores resultados e poupa tokens</span>
+          </div>
+          <div class="welcome-tip">
+            <span class="welcome-tip-icon">🔒</span>
+            <span class="welcome-tip-text"><strong>Sem dados de clientes</strong> — usa <code style="font-family:var(--f-mono);font-size:0.9em;color:var(--accent)">[CLIENTE]</code>, <code style="font-family:var(--f-mono);font-size:0.9em;color:var(--accent)">[PROJECTO]</code></span>
+          </div>
+          <div class="welcome-tip">
+            <span class="welcome-tip-icon">✨</span>
+            <span class="welcome-tip-text"><strong>Só se já testaste</strong> — qualidade > quantidade</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="welcome-footer">
+      <button class="welcome-skip" onclick="closeWelcome()">Saltar</button>
+      <button class="welcome-next" id="welcome-next-btn" onclick="welcomeNext()">Próximo →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// SUPABASE
+// ════════════════════════════════════════
+const SUPABASE_URL  = 'https://ebolqppbjlvikbhlrhqj.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_mfgJS7qA0H9uxfK1kC4D-Q_OsWWQRJS';
+const WORKSPACE = 'get2c';
+const DB_READY = !!SUPABASE_URL && !!SUPABASE_ANON;
+
+const sb = {
+  headers: {
+    'Content-Type': 'application/json',
+    'apikey': SUPABASE_ANON,
+    'Authorization': `Bearer ${SUPABASE_ANON}`,
+    'Prefer': 'return=representation'
+  },
+  async select(table, query='') {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, { headers: sb.headers });
+    if (!r.ok) throw new Error(await r.text());
+    return r.json();
+  },
+  async insert(table, body) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method:'POST', headers:sb.headers, body:JSON.stringify(body) });
+    if (!r.ok) throw new Error(await r.text());
+    return r.json();
+  },
+  async update(table, match, body) {
+    const qs = Object.entries(match).map(([k,v])=>`${k}=eq.${encodeURIComponent(v)}`).join('&');
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${qs}`, { method:'PATCH', headers:sb.headers, body:JSON.stringify(body) });
+    if (!r.ok) throw new Error(await r.text());
+    return r.json();
+  }
+};
+
+// ════════════════════════════════════════
+// STARTER PROMPTS — clearly marked as "to validate"
+// ════════════════════════════════════════
+const STARTERS = [
+  // PROPOSTAS (3)
+  {
+    id:'st-p1', cat:'propostas', type:'one',
+    title:'Resumo Executivo de Proposta',
+    author:'Arranque',
+    desc:'Gera um resumo executivo profissional para qualquer proposta de consultoria.',
+    prompt:`You are a senior consultant with 15+ years of experience. Write a professional executive summary for a consulting proposal with the following context:
+
+Project: [PROJECT NAME]
+Client: [CLIENT/COMPANY]
+Scope: [2-3 sentence description of what is being delivered]
+Regulatory or methodological framework: [e.g., EU Directive, ISO standard, sector best practice]
+Proposed timeline: [X months]
+Key deliverables: [list 3-4]
+
+Requirements:
+- Tone: authoritative, evidence-based, concise
+- Length: 250-350 words
+- Highlight project complexity and our team's added value
+- End with a clear statement of how our approach reduces client risk`
+  },
+  {
+    id:'st-p2', cat:'propostas', type:'few',
+    title:'Scope of Work no estilo da empresa',
+    author:'Arranque',
+    desc:'Replica o estilo de SOW da empresa usando 2 exemplos como referência.',
+    prompt:`You are a senior consultant drafting scopes of work (SOW). Study the two examples below and generate a new SOW in the exact same style and structure.
+
+--- EXAMPLE 1 ---
+Project: Coastal restoration assessment, Galicia Spain
+Scope:
+1. Baseline ecological survey (flora, fauna, hydrology) — Weeks 1-4
+2. Stakeholder consultation and regulatory mapping (Natura 2000, Ramsar) — Weeks 3-5
+3. Restoration options analysis with cost-benefit modelling — Weeks 5-8
+4. Draft and final Environmental Management Plan — Weeks 9-12
+Assumptions: Client provides site access. Third-party lab analysis included.
+
+--- EXAMPLE 2 ---
+Project: Industrial Brownfield Phase II ESA, Porto
+Scope:
+1. Review of Phase I findings and regulatory correspondence — Week 1
+2. Intrusive investigation design and contractor management — Weeks 2-4
+3. Chemical analysis and human health risk assessment — Weeks 4-7
+4. Remediation options appraisal and EA submission support — Weeks 8-10
+
+--- NEW PROJECT ---
+Project: [PROJECT NAME]
+Brief: [2-3 sentence description]
+
+Generate the SOW in the same format and level of detail.`
+  },
+  {
+    id:'st-p3', cat:'propostas', type:'one',
+    title:'Justificação de Honorários',
+    author:'Arranque',
+    desc:'Narrativa confiante de fees, focada em valor, sem soar defensiva.',
+    prompt:`You are a senior consultant. Write a professional fee justification narrative for inclusion in a proposal.
+
+Total fee: [AMOUNT + CURRENCY]
+Project type: [e.g., Habitat Regulations Assessment, Strategic Plan, Audit]
+Key cost drivers: [e.g., specialist fieldwork, 3 site visits, stakeholder engagement, regulatory liaison]
+Competitive context: [e.g., client may compare against lower-cost competitor]
+
+Tone: confident, value-focused, NOT defensive.
+Length: 150-200 words.
+Format: flowing professional prose — no bullet points.
+Emphasis: risk reduction, regulatory expertise, long-term client savings.`
+  },
+
+  // APRESENTAÇÕES (3)
+  {
+    id:'st-a1', cat:'apresentacoes', type:'one',
+    title:'Estrutura de slides para cliente',
+    author:'Arranque',
+    desc:'Gera estrutura completa slide-a-slide com bullets, notas de orador e visuais sugeridos.',
+    prompt:`You are a senior consultant preparing a client presentation. Generate a professional slide outline.
+
+Purpose: [e.g., present findings to planning authority / kickoff with client / public consultation]
+Audience: [e.g., planning officers, C-suite, community]
+Duration: [15 / 20 / 30 minutes]
+Project: [PROJECT NAME]
+Key messages to convey: [list 3-4]
+
+For each slide provide:
+- Slide number and title
+- 3-4 bullet points (concise, not full sentences)
+- Speaker notes (2-3 sentences)
+- Suggested visual (chart type, photo, map, diagram)
+
+Total slides: 10-14. Include: title, agenda, context, findings (3-4 slides), recommendations, next steps, Q&A.
+Tone: authoritative, accessible to non-technical audience.`
+  },
+  {
+    id:'st-a2', cat:'apresentacoes', type:'few',
+    title:'Narrativa de slides — Few-Shot',
+    author:'Arranque',
+    desc:'Treina o modelo no teu estilo de narrativa de slide a partir de 2 exemplos.',
+    prompt:`You are a senior consultant. Study these slide narrative examples and write a new one in the same style.
+
+--- EXAMPLE 1 ---
+Headline: Air quality remains within thresholds — but trend warrants monitoring
+Body: Modelled NO₂ at the nearest sensitive receptor is 28 µg/m³ — within the 40 µg/m³ annual mean objective. However, a 12% increase from baseline warrants a continuous monitoring condition. Recommendation: quarterly monitoring for 24 months post-construction.
+
+--- EXAMPLE 2 ---
+Headline: Proposed habitat creation delivers 18% biodiversity net gain
+Body: Using the DEFRA 3.1 Metric, the scheme delivers 18% BNG against a mandatory 10% threshold. Wildflower grassland creation (2.4 ha) and hedgerow planting (340 m) are the primary gain drivers. Secured through a 30-year legal agreement.
+
+--- NEW SLIDE ---
+Topic: [YOUR TOPIC]
+Key data points: [2-3 DATA POINTS]
+
+Write the slide headline and body in the same style. Be specific, data-driven, end with a clear implication.`
+  },
+  {
+    id:'st-a3', cat:'apresentacoes', type:'cot',
+    title:'Argumentação para steering committee',
+    author:'Arranque',
+    desc:'Constrói argumentação fundamentada passo-a-passo para apresentações de alto risco.',
+    prompt:`You are a senior consultant preparing to defend a recommendation at a steering committee. Walk through your argumentation step by step.
+
+Context: [DESCRIBE THE PROJECT AND DECISION POINT]
+Your recommendation: [STATE THE RECOMMENDATION]
+Likely objections from stakeholders: [LIST 2-3]
+
+Build the argument step by step:
+1. Frame the problem in terms the committee cares about
+2. Present the 2-3 strongest data points supporting the recommendation
+3. Anticipate each objection — for each, provide a direct counter
+4. Quantify the cost of NOT acting on your recommendation
+5. End with a clear ask: what decision do you need from them?
+
+Show your reasoning. Length: 400-500 words. Tone: confident but not arrogant.`
+  },
+
+  // RELATÓRIOS (3)
+  {
+    id:'st-r1', cat:'relatorios', type:'one',
+    title:'Sumário Não Técnico (SNT)',
+    author:'Arranque',
+    desc:'Capítulo de NTS em linguagem acessível ao público a partir de findings técnicos.',
+    prompt:`You are a senior consultant. Write a Non-Technical Summary (NTS) for an Environmental Impact Assessment.
+
+Project description: [2-3 sentences]
+Location: [general area, country]
+Topics assessed: [e.g., ecology, noise, air quality, heritage, hydrology]
+Significant effects identified: [list with magnitude: minor adverse, moderate adverse, significant beneficial]
+Mitigation measures: [key ones per topic]
+Residual effects after mitigation: [per topic]
+
+Requirements:
+- Plain English, no jargon — accessible to the public
+- Flowing paragraphs grouped by topic (no bullet points)
+- Length: 600-900 words
+- Brief project intro + concluding paragraph on overall significance
+- Use [PLACEHOLDER] where real figures are needed — do NOT invent data`
+  },
+  {
+    id:'st-r2', cat:'relatorios', type:'few',
+    title:'Matriz de Significância — Few-Shot',
+    author:'Arranque',
+    desc:'Completa novas entradas de matriz seguindo a lógica de exemplos validados.',
+    prompt:`You are a senior consultant applying a significance matrix. Study the examples and complete the new assessment in the same format.
+
+Significance scale: Negligible / Minor / Moderate / Major
+Receptor sensitivity: Low / Medium / High / Very High
+Effect magnitude: Negligible / Low / Medium / High
+
+--- EXAMPLE 1 ---
+Receptor: Ancient woodland (Very High sensitivity)
+Effect: Permanent root zone compaction during construction (Medium magnitude)
+Duration: Permanent | Extent: Local | Reversibility: Irreversible
+Significance BEFORE mitigation: Major Adverse
+Mitigation: No-dig construction zone, BS 5837 tree protection fencing
+Significance AFTER mitigation: Moderate Adverse
+Justification: Mitigation reduces physical disturbance but permanent hydrological changes remain.
+
+--- EXAMPLE 2 ---
+Receptor: Residential properties — noise (Medium sensitivity)
+Effect: Construction noise, piling phase (High magnitude, temporary)
+Duration: 6 weeks | Extent: Local | Reversibility: Fully reversible
+Significance BEFORE: Moderate Adverse
+Mitigation: BS 5228 working hours, low-noise piling method, prior notification
+Significance AFTER: Minor Adverse
+
+--- NEW ASSESSMENT ---
+Receptor: [RECEPTOR + SENSITIVITY]
+Effect: [EFFECT + MAGNITUDE]
+Duration: [temporary/permanent] | Extent: [local/regional] | Reversibility: [reversible/irreversible]
+
+Complete the full matrix entry including mitigation and justification.`
+  },
+  {
+    id:'st-r3', cat:'relatorios', type:'cot',
+    title:'Análise de conformidade regulatória',
+    author:'Arranque',
+    desc:'Avaliação passo-a-passo de conformidade contra múltiplas normas com gaps priorizados.',
+    prompt:`You are a senior consultant. Analyse the regulatory compliance of the project below step by step.
+
+Project: [PROJECT DESCRIPTION]
+Sector: [e.g., environmental, financial, data protection]
+Applicable regulations: [list 3-5 key regulations]
+Current status: [briefly describe what has been done so far]
+
+Walk through your analysis:
+1. For each regulation, identify the specific articles/clauses relevant to this project
+2. For each, assess current compliance status: COMPLIANT / PARTIAL / NON-COMPLIANT / UNCLEAR
+3. For partial or non-compliant items, describe the gap precisely
+4. Rank all gaps by: regulatory risk (high/medium/low) AND effort to close (high/medium/low)
+5. Propose a prioritised action plan: what to do first, what next, what last
+
+Show your reasoning at each step. Flag any item where you need more information with [VERIFY].
+Length: 600-800 words.`
+  },
+
+  // DADOS (3)
+  {
+    id:'st-d1', cat:'dados', type:'one',
+    title:'Interpretação de dados de monitorização',
+    author:'Arranque',
+    desc:'Cola dados em bruto; obtém comentário técnico com contexto regulatório.',
+    prompt:`You are a senior consultant interpreting monitoring data for a technical report.
+
+Environmental medium: [e.g., groundwater, air quality, noise, soil]
+Monitoring location/receptor: [description]
+Applicable standard: [e.g., WHO AQG 2021, EA Cat 4 Screening Values, BS 8233:2014]
+Data:
+[PASTE DATA — parameter, units, measured values, dates]
+
+Write a 300-450 word commentary that:
+1. States whether values comply with the applicable standard
+2. Identifies trends (improving, deteriorating, stable)
+3. Flags anomalous readings and plausible explanations
+4. Recommends follow-up actions
+5. Uses precise technical language suitable for regulatory submission
+
+Do NOT invent numbers. Use [CONFIRM] for any value to verify.`
+  },
+  {
+    id:'st-d2', cat:'dados', type:'few',
+    title:'Sumário de compliance multi-parâmetro',
+    author:'Arranque',
+    desc:'Gera tabela de compliance consistente a partir de exemplos validados.',
+    prompt:`You are a senior consultant. Study these compliance summary examples and generate a new one in the same format.
+
+--- EXAMPLE 1: Noise ---
+Parameter: LAeq,16h (daytime)
+Measured: 52 dB(A)
+Limit: 55 dB(A) (BS 8233:2014 — good acoustic design)
+Status: COMPLIANT (3 dB margin)
+Commentary: Within good design threshold. The 3 dB margin provides adequate buffer.
+
+--- EXAMPLE 2: Groundwater ---
+Parameter: Total petroleum hydrocarbons (TPH)
+Measured: 1,240 µg/L
+Limit: 10 µg/L (EA Drinking Water Standard)
+Status: NON-COMPLIANT (exceedance factor: 124×)
+Commentary: Significant exceedance indicates residual contamination from historic industrial use. Remediation target should be <10 µg/L.
+
+--- NEW ENTRY ---
+Parameter: [NAME + UNITS]
+Measured: [VALUE]
+Standard: [STANDARD + SOURCE]
+
+Generate the table row and commentary in the same format.`
+  },
+  {
+    id:'st-d3', cat:'dados', type:'cot',
+    title:'Diagnóstico de dados anómalos',
+    author:'Arranque',
+    desc:'Investigação passo-a-passo da origem provável de valores anómalos em datasets.',
+    prompt:`You are a senior consultant investigating anomalies in environmental data. Reason step by step.
+
+Dataset description: [WHAT WAS MEASURED, WHERE, WHEN, HOW]
+Anomaly observed: [DESCRIBE THE ANOMALY — outlier, sudden change, pattern break]
+Context: [WEATHER, OPERATIONS, RECENT EVENTS THAT MIGHT MATTER]
+
+Walk through your diagnosis:
+1. First, rule out measurement/instrument error — what would that look like in the data?
+2. Then, consider natural causes (weather events, seasonal patterns)
+3. Then, consider operational causes (site activities, nearby works)
+4. Then, consider data handling issues (unit conversion, sample contamination)
+5. Rank the remaining candidate explanations by likelihood
+6. For the top 2 explanations, describe what additional data would confirm or refute them
+
+Be transparent about uncertainty. Use [VERIFY] for assumptions you'd want to confirm.`
+  },
+
+  // EXCEL (3)
+  {
+    id:'st-e1', cat:'excel', type:'one',
+    title:'Registo de monitorização — estrutura Excel',
+    author:'Arranque',
+    desc:'Gera estrutura Excel completa para log de monitorização multi-parâmetro.',
+    prompt:`You are a senior consultant designing an Excel monitoring register for a project. Generate a detailed spreadsheet structure I can build immediately.
+
+Project type: [e.g., construction, industrial facility, ongoing operations]
+Parameters to monitor: [e.g., noise, dust, water quality, emissions]
+Frequency: [e.g., weekly, monthly]
+Monitoring points: [X locations]
+Trigger levels: [list key thresholds per parameter]
+
+For each worksheet provide:
+1. Tab name and purpose
+2. Column list: Column letter | Header | Data type | Format | Validation | Notes
+3. Conditional formatting rules (e.g., red if exceeds trigger)
+4. Excel formulas for summaries (rolling average, exceedance count)
+5. Dashboard tab with KPI cells
+
+Output as structured table. Use exact Excel formula syntax. Note any function that requires Excel 365 vs older versions.`
+  },
+  {
+    id:'st-e2', cat:'excel', type:'few',
+    title:'Folha BNG — Few-Shot DEFRA Metric',
+    author:'Arranque',
+    desc:'Estrutura Excel para cálculo BNG seguindo a lógica DEFRA 3.1.',
+    prompt:`You are a senior consultant. Study the BNG calculation examples below and generate a complete Excel sheet structure for a new site.
+
+--- EXAMPLE HABITAT ROW ---
+Habitat type: Marshy grassland (lowland)
+Area (ha): 1.2 | Distinctiveness: High (6) | Condition: Moderate (5) | Strategic significance: Low (1.0)
+Baseline units = 1.2 × 6 × 5 × 1.0 = 36.0
+Formula: =D4*E4*F4*G4
+
+--- SUMMARY FORMULAS ---
+Total baseline: =SUM(H4:H50)
+Total post-development: =SUM(H54:H100)
+Net gain %: =(H102-H51)/H51*100
+Pass/fail: =IF(H103>=10,"PASS – "&TEXT(H103,"0.0")&"%","FAIL – "&TEXT(H103,"0.0")&"%")
+
+--- NEW SITE ---
+Site name: [NAME]
+Baseline habitats: [list types with areas]
+Post-development habitats: [list creation/enhancement habitats]
+
+Generate:
+1. Full column structure for baseline and post-development tabs
+2. All formulas using DEFRA 3.1 multiplier logic
+3. Dashboard summary formulas
+4. Conditional formatting for pass/fail
+Flag any multiplier as [VERIFY DEFRA] for confirmation against current tool.`
+  },
+  {
+    id:'st-e3', cat:'excel', type:'one',
+    title:'Tracker de fees e recursos',
+    author:'Arranque',
+    desc:'Excel completo de gestão de projecto: budget vs actual, alocação, margem.',
+    prompt:`You are a senior consultant. Design an Excel project fee tracker for internal project management.
+
+Project: [NAME]
+Total contracted fee: [AMOUNT]
+Stages: [e.g., Stage 1: Survey, Stage 2: Assessment, Stage 3: Reporting]
+Team roles: [e.g., Director, Senior, Consultant, Graduate]
+Hourly rates per role: [list]
+Estimated hours per role per stage: [or use placeholders]
+Expenses budget: [amount + categories]
+
+Generate:
+1. Tab "Budget" — planned hours × rates per stage, fee allocation, expenses
+2. Tab "Actuals" — weekly time entries, cumulative burn, variance vs budget
+3. Tab "Dashboard" — % fee spent, % complete (manual input), projected outturn, RAG status
+4. All Excel formulas written explicitly
+5. Conditional formatting: green <80%, amber 80-95%, red >95%
+
+Note any formula requiring Excel 365 vs older versions.`
+  },
+
+  // COMUNICAÇÃO (3)
+  {
+    id:'st-c1', cat:'comunicacao', type:'one',
+    title:'Email de seguimento profissional',
+    author:'Arranque',
+    desc:'Email de follow-up que mantém o cliente envolvido sem soar insistente.',
+    prompt:`You are a senior consultant. Write a professional follow-up email to a client.
+
+Context: [WHAT WAS DISCUSSED IN LAST CONTACT]
+Time since last contact: [e.g., 2 weeks]
+Your goal with this email: [e.g., re-engage, request decision, share update]
+Client relationship: [e.g., new, established, sensitive]
+
+Requirements:
+- Subject line that gets opened (not generic)
+- Opening that doesn't apologise for the delay
+- Body: state purpose clearly, provide value (insight, update, useful resource)
+- Close: specific call-to-action with proposed next step
+- Length: 120-180 words
+- Tone: warm but professional, respects client's time`
+  },
+  {
+    id:'st-c2', cat:'comunicacao', type:'one',
+    title:'Resposta a comentários adversos do cliente',
+    author:'Arranque',
+    desc:'Resposta diplomática que mantém posição técnica sem confrontar o cliente.',
+    prompt:`You are a senior consultant. The client has pushed back on our recommendation. Write a diplomatic response that maintains our technical position.
+
+Our original recommendation: [BRIEF DESCRIPTION]
+Client's objection: [WHAT THEY SAID OR IMPLIED]
+Our technical basis: [WHY WE STAND BY IT]
+Risk if client overrides our recommendation: [WHAT COULD GO WRONG]
+
+Requirements:
+- Acknowledge the client's concern genuinely (not defensively)
+- Restate our recommendation with the strongest 1-2 reasons
+- Make the risk of NOT following our recommendation concrete and quantified if possible
+- Offer one middle-ground option if appropriate
+- End with respect for client's final decision authority
+- Length: 200-280 words
+- Tone: confident, respectful, NOT confrontational`
+  },
+  {
+    id:'st-c3', cat:'comunicacao', type:'cot',
+    title:'Preparação para reunião difícil',
+    author:'Arranque',
+    desc:'Plano passo-a-passo para reuniões com stakeholders céticos ou hostis.',
+    prompt:`You are a senior consultant preparing for a difficult stakeholder meeting. Think through the preparation step by step.
+
+Meeting purpose: [WHAT NEEDS TO BE ACHIEVED]
+Stakeholders attending: [WHO + THEIR LIKELY POSITION]
+The hard message you need to deliver: [WHAT WILL BE UNCOMFORTABLE]
+Outcome you need: [SPECIFIC DECISION OR COMMITMENT]
+
+Walk through your preparation:
+1. What is each stakeholder's biggest underlying concern? (not what they'll say, what they actually fear)
+2. What's the strongest version of their counter-argument? Steel-man it.
+3. What 2-3 facts could change their position if delivered well?
+4. What concession could you offer that costs us little but signals respect?
+5. If the meeting goes badly, what's your fallback to keep progress alive?
+6. Draft the opening 60 seconds — exactly what you'll say first
+
+Be specific. Show your reasoning. Length: 500-700 words.`
+  }
+];
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let prompts = [], myVotes = {}, myStars = {}, activity = [];
+let currentFilter = 'all', currentSort = 'score', currentSearch = '';
+let currentSlide = 1;
+const LOCAL_KEY = 'prompt2c_local_v3';
+const WELCOME_KEY = 'prompt2c_welcome_seen_v1';
+
+function loadLocal() {
+  try { const s=localStorage.getItem(LOCAL_KEY); if(s){const d=JSON.parse(s);myVotes=d.v||{};myStars=d.s||{};} } catch(e){}
+}
+function saveLocal() {
+  try { localStorage.setItem(LOCAL_KEY, JSON.stringify({v:myVotes,s:myStars})); } catch(e){}
+}
+
+// ════════════════════════════════════════
+// DB
+// ════════════════════════════════════════
+async function loadDB() {
+  if (!DB_READY) { prompts=[...STARTERS]; setDbStatus('offline'); return; }
+  setDbStatus('connecting');
+  try {
+    let rows = await sb.select('prompts','?order=score.desc');
+    if (!rows.length) {
+      for(const s of STARTERS) { try{await sb.insert('prompts',toDb(s));}catch(e){} }
+      rows = await sb.select('prompts','?order=score.desc');
+    }
+    prompts = rows.map(fromDb);
+    try {
+      const acts = await sb.select('activity','?order=created_at.desc&limit=15');
+      activity = acts.map(a=>({icon:a.icon,text:a.text,time:timeAgo(a.created_at)}));
+    } catch(e){}
+    setDbStatus('ok');
+  } catch(e) {
+    prompts = [...STARTERS];
+    setDbStatus('error');
+  }
+}
+
+function fromDb(r) {
+  return {
+    id:r.id, title:r.title, author:r.author,
+    desc:r.description||'', cat:r.category||'outro', type:r.type||'one',
+    score:r.score||0, stars:parseFloat(r.stars)||0, starCount:r.star_count||0,
+    ts:new Date(r.created_at).getTime(), prompt:r.prompt,
+    output:r.output||'', link:r.link||'',
+    isStarter: r.author === 'Arranque'
+  };
+}
+function toDb(p) {
+  return {
+    id:p.id, title:p.title, author:p.author,
+    description:p.desc, category:p.cat, type:p.type,
+    score:p.score||0, stars:p.stars||0, star_count:p.starCount||0,
+    prompt:p.prompt, output:p.output||'', link:p.link||''
+  };
+}
+
+function setDbStatus(state) {
+  const el = document.getElementById('db-status');
+  if (state==='ok')          { el.textContent='conectado'; el.style.color='var(--accent)'; }
+  else if(state==='offline') { el.textContent='offline';   el.style.color='var(--gold)'; }
+  else if(state==='error')   { el.textContent='erro de ligação'; el.style.color='var(--warn)'; }
+  else                       { el.textContent='a ligar…';  el.style.color='var(--text-dim)'; }
+}
+
+async function logActivity(icon, text) {
+  activity.unshift({icon, text, time:'agora'}); if(activity.length>15) activity.pop();
+  if(DB_READY) try{ await sb.insert('activity',{icon,text}); } catch(e){}
+}
+
+// ════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════
+function getFiltered() {
+  let list = [...prompts];
+  if(currentFilter!=='all') list = list.filter(p=>p.cat===currentFilter);
+  if(currentSearch.trim()){
+    const q = currentSearch.toLowerCase();
+    list = list.filter(p =>
+      p.title.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q) ||
+      p.author.toLowerCase().includes(q) ||
+      p.prompt.toLowerCase().includes(q)
+    );
+  }
+  if(currentSort==='score') list.sort((a,b)=>b.score-a.score);
+  else if(currentSort==='newest') list.sort((a,b)=>b.ts-a.ts);
+  else list.sort((a,b)=>b.stars-a.stars);
+  return list;
+}
+
+function countPlaceholders(text) {
+  const matches = text.match(/\[[A-Z][A-Z0-9_ \/\.\-]*\]/g);
+  return matches ? matches.length : 0;
+}
+
+function renderFeed() {
+  const list = getFiltered();
+  const feed = document.getElementById('feed');
+  if (!list.length) {
+    feed.innerHTML = `<div class="empty"><div class="empty-icon">🌿</div>Nenhum prompt nesta categoria ainda.<br><span style="font-size:0.78rem">Sê o primeiro a partilhar — usa o formulário em baixo.</span></div>`;
+    return;
+  }
+  const nonStarter = prompts.filter(p=>!p.isStarter);
+  const maxScore = nonStarter.length ? Math.max(...nonStarter.map(p=>p.score)) : -Infinity;
+
+  const catNames = {
+    propostas:'Propostas', apresentacoes:'Apresentações', relatorios:'Relatórios',
+    dados:'Dados', excel:'Excel', comunicacao:'Comunicação', outro:'Outro'
+  };
+  const typeNames = { one:'1-shot', few:'few-shot', cot:'chain-of-thought' };
+
+  feed.innerHTML = list.map((p, i) => {
+    const isGold = !p.isStarter && p.score === maxScore && p.score > 2;
+    const isStarter = p.isStarter;
+    const mv = myVotes[p.id] || '';
+    const ms = myStars[p.id] || 0;
+    const sc = p.score>0 ? 'pos' : p.score<0 ? 'neg' : '';
+    const stars = [1,2,3,4,5].map(n =>
+      `<span class="star ${n<=(ms||Math.round(p.stars))?'lit':''}" onclick="rateStar('${p.id}',${n})">${n<=(ms||Math.round(p.stars))?'★':'☆'}</span>`
+    ).join('');
+    const phCount = countPlaceholders(p.prompt);
+    const tier = isGold ? 'gold-tier' : (isStarter ? 'starter' : '');
+
+    let outputBlock = '';
+    if (p.output || p.link) {
+      outputBlock = `<div class="output-example">
+        <div class="output-label">📸 Exemplo de resultado</div>
+        ${p.output ? `<div class="output-content">${esc(p.output)}</div>` : ''}
+        ${p.link ? `<div style="margin-top:0.5rem"><a class="output-link" href="${esc(p.link)}" target="_blank" rel="noopener">↗ Ver documento completo</a></div>` : ''}
+      </div>`;
+    }
+
+    return `<div class="pcard ${tier}" id="card-${p.id}" style="animation-delay:${i*0.04}s">
+  <div class="pcard-inner">
+    <div class="vote-col">
+      <button class="vote-btn ${mv==='up'?'voted-up':''}" onclick="vote('${p.id}','up')" title="Bom prompt">▲</button>
+      <span class="vote-score ${sc}">${p.score}</span>
+      <button class="vote-btn ${mv==='down'?'voted-down':''}" onclick="vote('${p.id}','down')" title="Não funciona bem">▼</button>
+      <div class="stars" title="Avalia a qualidade">${stars}</div>
+    </div>
+    <div class="pcard-body">
+      <div class="pcard-meta">
+        <span class="cat-tag ${p.cat}">${catNames[p.cat]||p.cat}</span>
+        <span class="type-chip ${p.type}">${typeNames[p.type]||p.type}</span>
+        ${p.isStarter ? '' : `<span class="author-tag">por ${p.author}</span>`}
+      </div>
+      <div class="pcard-title">${p.title}</div>
+      <div class="pcard-desc">${p.desc}</div>
+      ${phCount > 0 ? `<span class="placeholder-count">⚙ ${phCount} campo${phCount>1?'s':''} para adaptar</span>` : ''}
+    </div>
+  </div>
+  <div class="pcard-preview" id="prev-${p.id}">
+    <pre>${esc(p.prompt)}</pre>
+  </div>
+  ${outputBlock}
+  <div class="pcard-footer">
+    <button class="btn-sm" onclick="togglePrev('${p.id}',this)">Ver prompt</button>
+    <button class="btn-sm" onclick="copyCard('${p.id}',this)">Copiar prompt</button>
+    <span class="rating-info">★ ${p.stars.toFixed(1)} · ${p.starCount} avaliação${p.starCount!==1?'ões':''}</span>
+    <button class="btn-sm report" onclick="reportPrompt('${p.id}','${esc(p.title).replace(/'/g,"&apos;")}')" title="Reportar">⚐</button>
+  </div>
+</div>`;
+  }).join('');
+  renderStats();
+}
+
+function renderLeaderboard() {
+  // Só prompts com pelo menos 1 voto real (positivo ou negativo)
+  const voted = prompts.filter(p => p.score !== 0);
+  const top = voted.sort((a,b)=>b.score-a.score).slice(0,6);
+  const lb = document.getElementById('leaderboard');
+  if (!top.length) {
+    lb.innerHTML = `<div style="padding:1.2rem 1.1rem;color:var(--text-dim);font-size:0.75rem;line-height:1.5">Ainda sem prompts votados.<br><span style="font-size:0.7rem">Os prompts aparecem aqui quando a equipa começar a votar.</span></div>`;
+    return;
+  }
+  lb.innerHTML = top.map((p,i) => `
+<div class="lb-row" onclick="jumpTo('${p.id}')">
+  <span class="lb-rank ${i<3?'top':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span>
+  <div class="lb-info"><div class="lb-title">${p.title}</div><div class="lb-auth">${p.author}</div></div>
+  <span class="lb-pts">${p.score>=0?'+':''}${p.score}</span>
+</div>`).join('');
+}
+
+function renderActivity() {
+  const el = document.getElementById('activity-feed');
+  el.innerHTML = activity.length
+    ? activity.slice(0,6).map(a => `<div class="act-item"><span class="act-icon">${a.icon}</span><span style="flex:1">${a.text}</span><span class="act-time">${a.time}</span></div>`).join('')
+    : `<div style="padding:1rem;color:var(--text-dim);font-size:0.75rem">Sem actividade ainda.</div>`;
+}
+
+function renderStats() {
+  const total = prompts.length;
+  const contrib = [...new Set(prompts.filter(p=>p.author!=='Arranque').map(p=>p.author))].length;
+  const votes = Object.keys(myVotes).length;
+  const rated = prompts.filter(p=>p.starCount>0);
+  const avg = rated.length ? (rated.reduce((s,p)=>s+p.stars,0)/rated.length).toFixed(1) : '—';
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-contrib').textContent = contrib;
+  document.getElementById('s-votes').textContent = votes;
+  document.getElementById('s-avg').textContent = avg==='—' ? '—' : `★${avg}`;
+}
+
+function renderAll() { renderFeed(); renderLeaderboard(); renderActivity(); }
+
+// ════════════════════════════════════════
+// ACTIONS
+// ════════════════════════════════════════
+let voteInFlight = new Set();
+
+async function vote(id, dir) {
+  if (voteInFlight.has(id)) return; // previne duplo-clique
+  voteInFlight.add(id);
+
+  const p = prompts.find(x=>x.id===id);
+  if(!p) { voteInFlight.delete(id); return; }
+
+  const prev = myVotes[id];
+  let scoreDelta = 0;
+
+  if(prev===dir) {
+    // remover voto existente
+    scoreDelta = dir==='up' ? -1 : 1;
+    delete myVotes[id];
+  } else {
+    // alterar ou criar novo voto
+    if(prev) scoreDelta += prev==='up' ? -1 : 1; // desfaz voto anterior
+    scoreDelta += dir==='up' ? 1 : -1; // aplica novo
+    myVotes[id] = dir;
+  }
+
+  p.score += scoreDelta;
+  saveLocal();
+  renderAll();
+  showToast(dir==='up' ? '⬆ Upvoted!' : '⬇ Downvoted');
+
+  if(DB_READY) {
+    try {
+      await sb.update('prompts', {id}, {score: p.score});
+    } catch(e) {
+      console.error('Erro a guardar voto:', e);
+      showToast('⚠ Erro a sincronizar voto');
+    }
+  }
+  voteInFlight.delete(id);
+}
+
+async function rateStar(id, n) {
+  const p = prompts.find(x=>x.id===id); if(!p) return;
+  const prev = myStars[id];
+  if(prev) { p.stars = (p.stars * p.starCount - prev + n) / p.starCount; }
+  else { p.stars = (p.stars * p.starCount + n) / (p.starCount + 1); p.starCount++; }
+  myStars[id] = n; saveLocal(); renderAll();
+  showToast(`★ ${n} estrela${n>1?'s':''} — obrigado!`);
+  if(DB_READY) try{ await sb.update('prompts',{id},{stars:p.stars, star_count:p.starCount}); }catch(e){}
+}
+
+function togglePrev(id, btn) {
+  const el = document.getElementById('prev-'+id); el.classList.toggle('open');
+  btn.textContent = el.classList.contains('open') ? 'Fechar' : 'Ver prompt';
+}
+
+function copyCard(id, btn) {
+  const p = prompts.find(x=>x.id===id); if(!p) return;
+  navigator.clipboard.writeText(p.prompt).then(() => {
+    btn.textContent = 'Copiado ✓'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar prompt'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function jumpTo(id) {
+  currentFilter = 'all'; currentSort = 'score';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn')[0].classList.add('active');
+  renderFeed();
+  setTimeout(() => { const el = document.getElementById('card-'+id); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); }, 120);
+}
+
+function reportPrompt(id, title) {
+  if (confirm(`Reportar o prompt "${title}" como inadequado?\n\nA equipa será notificada para rever.`)) {
+    logActivity('🚩', `Prompt "${title}" foi reportado`);
+    renderActivity();
+    showToast('🚩 Prompt reportado — obrigado');
+  }
+}
+
+// ════════════════════════════════════════
+// SUBMIT
+// ════════════════════════════════════════
+async function submitPrompt() {
+  const author = document.getElementById('f-author').value.trim();
+  const title = document.getElementById('f-title').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+  const cat = document.getElementById('f-cat').value;
+  const type = document.getElementById('f-type').value;
+  const prompt = document.getElementById('f-prompt').value.trim();
+  const output = document.getElementById('f-output').value.trim();
+  const link = document.getElementById('f-link').value.trim();
+
+  if(!author || !title || !prompt) {
+    showToast('⚠ Preenche nome, título e prompt');
+    return;
+  }
+
+  const id = 'p-' + Date.now();
+  const newP = { id, title, author, desc: desc||'Prompt da equipa.', cat, type, score:0, stars:0, starCount:0, ts:Date.now(), prompt, output, link, isStarter:false };
+  if(DB_READY) try{ await sb.insert('prompts', toDb(newP)); }catch(e){ console.error(e); }
+  prompts.unshift(newP);
+  await logActivity('🌱', `${author} partilhou "${title}"`);
+  ['f-author','f-title','f-desc','f-prompt','f-output','f-link'].forEach(i => document.getElementById(i).value = '');
+  currentSort = 'newest'; document.querySelector('.sort-select').value = 'newest';
+  renderAll(); scrollToLibrary();
+  showToast('🌱 Prompt publicado!');
+}
+
+function exportBackup() {
+  const data = { workspace: WORKSPACE, exported_at: new Date().toISOString(), prompts: prompts };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `prompt2c-backup-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('⤓ Backup descarregado');
+}
+
+// ════════════════════════════════════════
+// FILTERS / THEME / NAV
+// ════════════════════════════════════════
+function setFilter(f, btn) { currentFilter=f; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); renderFeed(); }
+function setSort(v) { currentSort=v; renderFeed(); }
+function setSearch(v) { currentSearch=v; renderFeed(); }
+
+function toggleTheme() {
+  const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  try{ localStorage.setItem('prompt2c_theme', t); }catch(e){}
+}
+
+function scrollToLibrary() { document.getElementById('library').scrollIntoView({behavior:'smooth'}); }
+function scrollToLearn() { document.getElementById('learn').scrollIntoView({behavior:'smooth'}); }
+function scrollToSubmit() { document.getElementById('submit').scrollIntoView({behavior:'smooth'}); }
+
+// ════════════════════════════════════════
+// WELCOME MODAL
+// ════════════════════════════════════════
+function showWelcome() {
+  document.getElementById('welcome-modal').classList.add('show');
+}
+
+function closeWelcome() {
+  document.getElementById('welcome-modal').classList.remove('show');
+  try{ localStorage.setItem(WELCOME_KEY, '1'); }catch(e){}
+}
+
+function welcomeNext() {
+  if (currentSlide < 4) {
+    document.getElementById('ws'+currentSlide).classList.add('hidden');
+    document.getElementById('wp'+currentSlide).classList.remove('active');
+    document.getElementById('wp'+currentSlide).classList.add('done');
+    currentSlide++;
+    document.getElementById('ws'+currentSlide).classList.remove('hidden');
+    document.getElementById('wp'+currentSlide).classList.add('active');
+    if (currentSlide === 4) {
+      document.getElementById('welcome-next-btn').textContent = 'Começar →';
+    }
+  } else {
+    closeWelcome();
+  }
+}
+
+// ════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function timeAgo(iso) {
+  const d = Date.now() - new Date(iso).getTime(), m = Math.floor(d/60000);
+  if(m<1) return 'agora'; if(m<60) return m+'min';
+  const h = Math.floor(m/60); if(h<24) return h+'h atrás';
+  return Math.floor(h/24)+'d atrás';
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════
+(async () => {
+  try { const t = localStorage.getItem('prompt2c_theme'); if(t) document.documentElement.setAttribute('data-theme', t); } catch(e){}
+  loadLocal();
+  await loadDB();
+  renderAll();
+  try {
+    const seen = localStorage.getItem(WELCOME_KEY);
+    if (!seen) setTimeout(() => showWelcome(), 600);
+  } catch(e){}
+})();
+</script>
+</body>
+</html>
