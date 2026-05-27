@@ -128,14 +128,6 @@ nav {
 
 .nav-right { display: flex; align-items: center; gap: 0.9rem; }
 
-.db-status {
-  font-family: var(--f-mono); font-size: 0.6rem;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--text-muted);
-  display: flex; align-items: center; gap: 0.35rem;
-}
-.db-status::before { content: '⬤'; font-size: 0.7rem; }
-
 .lang-toggle {
   font-family: var(--f-mono); font-size: 0.62rem;
   letter-spacing: 0.08em;
@@ -147,20 +139,33 @@ nav {
 .lang-toggle:hover { color: var(--accent); border-color: var(--accent); }
 .lang-toggle .on { color: var(--accent); font-weight: 500; }
 
-.theme-toggle {
-  width: 42px; height: 22px;
+.theme-switcher {
+  display: flex; align-items: center; gap: 0.45rem;
+  padding: 0.25rem 0.55rem; border-radius: 20px;
   background: var(--panel); border: 1px solid var(--border2);
+}
+.theme-icon {
+  font-size: 0.85rem; opacity: 0.4;
+  transition: opacity 0.3s, color 0.3s;
+}
+[data-theme="dark"] .theme-icon-dark { opacity: 1; color: var(--accent); }
+[data-theme="light"] .theme-icon-light { opacity: 1; color: var(--gold); }
+
+.theme-toggle {
+  width: 36px; height: 18px;
+  background: var(--bg2); border: 1px solid var(--border);
   border-radius: 20px; cursor: pointer; position: relative;
   transition: background 0.3s;
+  padding: 0;
 }
 .theme-toggle::after {
   content: '';
-  position: absolute; top: 2px; left: 2px;
-  width: 16px; height: 16px; border-radius: 50%;
+  position: absolute; top: 1px; left: 1px;
+  width: 14px; height: 14px; border-radius: 50%;
   background: var(--accent);
-  transition: transform 0.3s;
+  transition: transform 0.3s, background 0.3s;
 }
-[data-theme="light"] .theme-toggle::after { transform: translateX(20px); background: var(--gold); }
+[data-theme="light"] .theme-toggle::after { transform: translateX(18px); background: var(--gold); }
 
 /* ══ HERO ══ */
 .hero {
@@ -682,8 +687,8 @@ nav {
 }
 .btn-sm:hover { color: var(--text); border-color: var(--accent); }
 .btn-sm.copied { color: var(--accent); border-color: var(--accent); }
-.btn-sm.report { margin-left: auto; color: var(--text-dim); border-color: var(--border); }
-.btn-sm.report:hover { color: var(--warn); border-color: var(--warn); }
+.btn-sm.delete { margin-left: auto; color: var(--text-dim); border-color: var(--border); }
+.btn-sm.delete:hover { color: var(--warn); border-color: var(--warn); background: rgba(255,140,90,0.06); }
 
 .rating-info {
   font-family: var(--f-mono); font-size: 0.6rem;
@@ -976,8 +981,11 @@ nav {
     <span class="workspace-tag">Get2C · Consultoria</span>
   </div>
   <div class="nav-right">
-    <span class="db-status" id="db-status">a ligar…</span>
-    <button class="theme-toggle" onclick="toggleTheme()" title="Modo claro/escuro"></button>
+    <div class="theme-switcher" title="Alternar entre modo escuro e claro">
+      <span class="theme-icon theme-icon-dark">🌙</span>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar entre modo escuro e claro"></button>
+      <span class="theme-icon theme-icon-light">☀</span>
+    </div>
   </div>
 </nav>
 
@@ -1047,7 +1055,7 @@ nav {
             <pre>You are a senior environmental consultant.
 Write an executive summary for an EIA
 proposal for a wind farm in Natura 2000
-area. Client: EDP. Timeline: 8 months.
+area. Client: [CLIENT NAME]. Timeline: 8 months.
 Tone: authoritative. Length: 280-320 words.</pre>
           </div>
         </div>
@@ -1391,6 +1399,12 @@ const sb = {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${qs}`, { method:'PATCH', headers:sb.headers, body:JSON.stringify(body) });
     if (!r.ok) throw new Error(await r.text());
     return r.json();
+  },
+  async delete(table, match) {
+    const qs = Object.entries(match).map(([k,v])=>`${k}=eq.${encodeURIComponent(v)}`).join('&');
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${qs}`, { method:'DELETE', headers:sb.headers });
+    if (!r.ok) throw new Error(await r.text());
+    return r.ok;
   }
 };
 
@@ -1404,20 +1418,24 @@ const STARTERS = [
     title:'Resumo Executivo de Proposta',
     author:'Arranque',
     desc:'Gera um resumo executivo profissional para qualquer proposta de consultoria.',
-    prompt:`You are a senior consultant with 15+ years of experience. Write a professional executive summary for a consulting proposal with the following context:
+    prompt:`You are a senior environmental and sustainability consultant with 15+ years of experience advising private and public clients in the Iberian Peninsula. Write a professional executive summary for a consulting proposal with the following context.
 
 Project: [PROJECT NAME]
-Client: [CLIENT/COMPANY]
+Client type: [promoter / financial institution / public authority / operator]
 Scope: [2-3 sentence description of what is being delivered]
-Regulatory or methodological framework: [e.g., EU Directive, ISO standard, sector best practice]
+Primary regulatory framework: [e.g., RJIA, EU Habitats Directive 92/43/EEC, Water Framework Directive 2000/60/EC, ESRS E1, EU Taxonomy Regulation 2020/852, IED 2010/75/EU, sectoral standard]
+Methodological reference: [e.g., GHG Protocol Corporate Standard, ISO 14064-1, DEFRA Biodiversity Metric, sector BAT conclusions]
 Proposed timeline: [X months]
 Key deliverables: [list 3-4]
 
 Requirements:
-- Tone: authoritative, evidence-based, concise
+- Tone: authoritative, evidence-based, concise — the voice of someone who has defended assessments before APA, CCDR or sectoral regulators
 - Length: 250-350 words
-- Highlight project complexity and our team's added value
-- End with a clear statement of how our approach reduces client risk`
+- Foreground regulatory exposure and the downstream cost of getting it wrong (delays, legal challenge, reputational risk, RECAPE)
+- Highlight specific methodological choices that distinguish a defensible assessment from a tick-box one
+- End with a clear statement of how our approach reduces client regulatory and delivery risk
+
+Do NOT invent specific past projects, fees, or named clients. Use [CONFIRM] for fees, timelines or deliverable counts.`
   },
   {
     id:'st-p2', cat:'propostas', type:'few',
@@ -1454,17 +1472,22 @@ Generate the SOW in the same format and level of detail.`
     title:'Justificação de Honorários',
     author:'Arranque',
     desc:'Narrativa confiante de fees, focada em valor, sem soar defensiva.',
-    prompt:`You are a senior consultant. Write a professional fee justification narrative for inclusion in a proposal.
+    prompt:`You are a senior environmental and sustainability consultant defending a fee proposal where the client is likely to compare against a lower-cost competitor. Write a professional fee justification narrative for inclusion in a proposal.
 
 Total fee: [AMOUNT + CURRENCY]
-Project type: [e.g., Habitat Regulations Assessment, Strategic Plan, Audit]
-Key cost drivers: [e.g., specialist fieldwork, 3 site visits, stakeholder engagement, regulatory liaison]
-Competitive context: [e.g., client may compare against lower-cost competitor]
+Project type: [e.g., EIA Phase A scoping, ESRS E1 climate disclosure, Biodiversity Net Gain calculation, Natura 2000 Appropriate Assessment, GHG inventory verification, environmental due diligence]
+Key cost drivers: [e.g., specialist fieldwork in sensitive habitats, multi-season survey effort, regulatory liaison with APA / ICNF / CCDR, stakeholder engagement, specialist sub-consultant fees, lab analysis]
+Competitive context: [e.g., client comparing against generalist consultancy or in-house team]
+Risk if delivered cheaply: [e.g., reopening of public consultation, RECAPE rejection, project delay, withdrawal of permit, financier covenant breach]
 
-Tone: confident, value-focused, NOT defensive.
-Length: 150-200 words.
-Format: flowing professional prose — no bullet points.
-Emphasis: risk reduction, regulatory expertise, long-term client savings.`
+Requirements:
+- Tone: confident, value-focused, NOT defensive — the voice of someone who has seen projects unravel from under-scoped assessments
+- Length: 150-200 words
+- Format: flowing professional prose — no bullet points
+- Emphasis: regulatory risk reduction (avoid permit refusal, RECAPE, withdrawal); the long-term cost of mitigation imposed by a regulator vs. designed in early; the team's track record with the specific regulator
+- Acknowledge the competitor without naming or denigrating; reframe the conversation on value, not unit price
+
+Do NOT invent specific past projects or named clients. Use [REFER TO PRIOR WORK] where a specific track-record reference would land well.`
   },
 
   // APRESENTAÇÕES (3)
@@ -1473,22 +1496,34 @@ Emphasis: risk reduction, regulatory expertise, long-term client savings.`
     title:'Estrutura de slides para cliente',
     author:'Arranque',
     desc:'Gera estrutura completa slide-a-slide com bullets, notas de orador e visuais sugeridos.',
-    prompt:`You are a senior consultant preparing a client presentation. Generate a professional slide outline.
+    prompt:`You are a senior environmental and sustainability consultant preparing a client presentation. Generate a professional slide outline.
 
-Purpose: [e.g., present findings to planning authority / kickoff with client / public consultation]
-Audience: [e.g., planning officers, C-suite, community]
+Purpose: [e.g., present EIA findings to APA, kickoff with promoter, RJIA public consultation, ESG steering committee, board sustainability briefing, ESRS materiality validation]
+Audience: [e.g., APA technical staff, CCDR officers, municipal council, affected community, C-suite, investment committee]
 Duration: [15 / 20 / 30 minutes]
 Project: [PROJECT NAME]
+Project sensitivity: [e.g., Natura 2000 site, urban brownfield, lithium mining concession, large-scale solar, infrastructure with transboundary impact]
 Key messages to convey: [list 3-4]
+Likely contentious point(s): [list 1-2 — what will be hardest to land]
 
 For each slide provide:
 - Slide number and title
-- 3-4 bullet points (concise, not full sentences)
-- Speaker notes (2-3 sentences)
-- Suggested visual (chart type, photo, map, diagram)
+- 3-4 bullet points (concise — landing on findings and implications, not process)
+- Speaker notes (2-3 sentences — what you actually say, including how to pre-empt the contentious points)
+- Suggested visual (chart type, GIS map, photo, diagram, comparison table)
+- Risk flag: any slide where the audience could derail the meeting
 
-Total slides: 10-14. Include: title, agenda, context, findings (3-4 slides), recommendations, next steps, Q&A.
-Tone: authoritative, accessible to non-technical audience.`
+Total slides: 10-14. Structure:
+1. Title + project context
+2. Agenda (audience-tailored)
+3. Regulatory or methodological framing (1-2 slides)
+4. Findings (3-5 slides — data + interpretation, never raw data alone)
+5. Recommendations (with rationale, not just instruction)
+6. Risks of not acting on recommendations
+7. Next steps and the decision asked of the audience
+8. Q&A holding slide
+
+Tone: authoritative for technical audiences, accessible without dumbing down for non-technical. Match the regulatory register the audience expects.`
   },
   {
     id:'st-a2', cat:'apresentacoes', type:'few',
@@ -1516,20 +1551,23 @@ Write the slide headline and body in the same style. Be specific, data-driven, e
     title:'Argumentação para steering committee',
     author:'Arranque',
     desc:'Constrói argumentação fundamentada passo-a-passo para apresentações de alto risco.',
-    prompt:`You are a senior consultant preparing to defend a recommendation at a steering committee. Walk through your argumentation step by step.
+    prompt:`You are a senior environmental and sustainability consultant preparing to defend a recommendation at a steering committee. Walk through your argumentation step by step.
 
-Context: [DESCRIBE THE PROJECT AND DECISION POINT]
-Your recommendation: [STATE THE RECOMMENDATION]
-Likely objections from stakeholders: [LIST 2-3]
+Context: [PROJECT DESCRIPTION AND DECISION POINT]
+Your recommendation: [STATE THE RECOMMENDATION — e.g., adopt a costlier mitigation, redesign to avoid impact, delay submission to gather more data, escalate to client legal team]
+Likely objections from stakeholders: [LIST 2-3 — distinguish budget objections, schedule objections, optics objections]
+Regulatory exposure if recommendation is rejected: [WHAT'S THE LEGAL / PERMIT / DISCLOSURE RISK?]
+Reputational exposure if recommendation is rejected: [STAKEHOLDERS, COMMUNITY, INVESTOR-FACING?]
 
 Build the argument step by step:
-1. Frame the problem in terms the committee cares about
-2. Present the 2-3 strongest data points supporting the recommendation
-3. Anticipate each objection — for each, provide a direct counter
-4. Quantify the cost of NOT acting on your recommendation
-5. End with a clear ask: what decision do you need from them?
+1. FRAME — reframe the decision in the committee's own KPIs (project IRR, permit timeline, reputational risk, disclosure obligation) — not in environmental jargon
+2. EVIDENCE — present the 2-3 strongest data points supporting the recommendation, citing the regulatory or methodological standard each one anchors against
+3. OBJECTIONS — for each anticipated objection, provide a direct, respectful counter that acknowledges the legitimate concern before answering it
+4. COST OF INACTION — quantify the downside of NOT following the recommendation: delay, RECAPE, permit refusal, ESRS disclosure non-compliance, mitigation imposed by regulator at greater cost, financing conditions breached (SFDR, green bond covenants)
+5. CONCESSION — offer a concrete middle ground if appropriate (phased approach, conditional decision pending more data)
+6. ASK — close with the specific decision needed from the committee, by when, and what the consultant will do once decided
 
-Show your reasoning. Length: 400-500 words. Tone: confident but not arrogant.`
+Show your reasoning. Length: 400-500 words. Tone: confident but not arrogant — the voice of someone who has defended assessments under cross-examination before.`
   },
 
   // RELATÓRIOS (3)
@@ -1594,21 +1632,26 @@ Complete the full matrix entry including mitigation and justification.`
     title:'Análise de conformidade regulatória',
     author:'Arranque',
     desc:'Avaliação passo-a-passo de conformidade contra múltiplas normas com gaps priorizados.',
-    prompt:`You are a senior consultant. Analyse the regulatory compliance of the project below step by step.
+    prompt:`You are a senior environmental and sustainability consultant. Conduct a structured regulatory compliance review of the project below, reasoning step by step.
 
 Project: [PROJECT DESCRIPTION]
-Sector: [e.g., environmental, financial, data protection]
-Applicable regulations: [list 3-5 key regulations]
-Current status: [briefly describe what has been done so far]
+Activity sector: [e.g., extractive industry, energy generation, infrastructure, agro-industry, real estate, financial undertaking, manufacturing]
+Geographic scope: [PT national / regional CCDR / EU cross-border / international]
+Applicable regulatory framework: [list 3-6 key regulations — e.g., RJIA (DL 151-B/2013 as amended), Habitats Directive 92/43/EEC, Water Framework Directive 2000/60/EC, IED 2010/75/EU, ESRS E1-E5, EU Taxonomy 2020/852, SFDR 2019/2088, CSDDD, ISO 14001, sectoral BAT conclusions]
+Current project status: [phase, what has been submitted, what regulator response has been received]
 
 Walk through your analysis:
-1. For each regulation, identify the specific articles/clauses relevant to this project
-2. For each, assess current compliance status: COMPLIANT / PARTIAL / NON-COMPLIANT / UNCLEAR
-3. For partial or non-compliant items, describe the gap precisely
-4. Rank all gaps by: regulatory risk (high/medium/low) AND effort to close (high/medium/low)
-5. Propose a prioritised action plan: what to do first, what next, what last
+1. SCOPE — for each regulation, identify the specific articles, clauses, or annexes relevant to this project — cite them precisely. Distinguish mandatory from voluntary (best practice) requirements.
+2. STATUS — for each requirement, assess current compliance: COMPLIANT / PARTIAL / NON-COMPLIANT / UNCLEAR. Note the evidence basis for each conclusion.
+3. GAP DESCRIPTION — for partial or non-compliant items, describe the gap precisely: what is missing, what would be required to close it, who needs to act.
+4. RISK RANKING — rank gaps on two axes:
+   (a) regulatory risk (permit refusal, RECAPE, infringement, disclosure non-compliance, contractual breach with financiers)
+   (b) effort to close (data collection, design change, stakeholder engagement, legal opinion)
+5. PRIORITISED ACTION PLAN — what to do first (high risk + low effort = immediate), what next (high risk + high effort = critical path), what last (low risk = monitor). Sequence by regulatory deadline where applicable.
+6. ESCALATION — flag any gap that needs legal counsel, regulator pre-engagement, or board-level decision before the consultant alone can recommend.
 
-Show your reasoning at each step. Flag any item where you need more information with [VERIFY].
+Show your reasoning at each step. Use [VERIFY] where current legal text needs checking against amendments (regulations change — never assume your memory of a clause is current). Use [LEGAL OPINION] where the question crosses into legal interpretation rather than environmental judgment.
+
 Length: 600-800 words.`
   },
 
@@ -1744,24 +1787,28 @@ Flag any multiplier as [VERIFY DEFRA] for confirmation against current tool.`
     title:'Tracker de fees e recursos',
     author:'Arranque',
     desc:'Excel completo de gestão de projecto: budget vs actual, alocação, margem.',
-    prompt:`You are a senior consultant. Design an Excel project fee tracker for internal project management.
+    prompt:`You are a senior environmental and sustainability consultant. Design an Excel project fee tracker for internal management of a consulting engagement.
 
 Project: [NAME]
+Project type: [e.g., EIA, ESG due diligence, GHG inventory, biodiversity assessment, sustainability strategy, monitoring campaign]
 Total contracted fee: [AMOUNT]
-Stages: [e.g., Stage 1: Survey, Stage 2: Assessment, Stage 3: Reporting]
-Team roles: [e.g., Director, Senior, Consultant, Graduate]
+Stages: [e.g., Phase A Scoping / Phase B Baseline / Phase C Assessment / Phase D Reporting / Phase E Public Consultation Support]
+Team roles: [e.g., Director, Senior Specialist, Consultant, Junior Consultant, GIS Technician, sub-consultant — name discipline]
 Hourly rates per role: [list]
 Estimated hours per role per stage: [or use placeholders]
-Expenses budget: [amount + categories]
+Expenses budget: [amount + categories — travel, lab analysis, GIS data, stakeholder workshop, regulator fee]
+Sub-consultant fees: [if applicable, by discipline]
 
 Generate:
-1. Tab "Budget" — planned hours × rates per stage, fee allocation, expenses
-2. Tab "Actuals" — weekly time entries, cumulative burn, variance vs budget
-3. Tab "Dashboard" — % fee spent, % complete (manual input), projected outturn, RAG status
-4. All Excel formulas written explicitly
-5. Conditional formatting: green <80%, amber 80-95%, red >95%
+1. Tab "Budget" — planned hours × rates per stage, fee allocation, expenses, sub-consultant fees, contingency line
+2. Tab "Actuals" — weekly time entries by role and stage, cumulative burn, variance vs budget, expenses incurred
+3. Tab "Variations" — log of approved variations / change orders with fee impact (important for projects where scope shifts during baseline season)
+4. Tab "Dashboard" — % fee spent, % complete (manual input by stage), projected outturn, RAG status, recovery rate per role
+5. All Excel formulas written explicitly, using exact syntax
+6. Conditional formatting: green <80%, amber 80-95%, red >95%
+7. Data validation on input cells (date format, role dropdown, stage dropdown)
 
-Note any formula requiring Excel 365 vs older versions.`
+Note any formula requiring Excel 365 (LET, LAMBDA, XLOOKUP) vs Excel 2016+ compatibility. Flag any sub-consultant invoice tracking that requires multi-currency handling.`
   },
 
   // COMUNICAÇÃO (3)
@@ -1770,63 +1817,148 @@ Note any formula requiring Excel 365 vs older versions.`
     title:'Email de seguimento profissional',
     author:'Arranque',
     desc:'Email de follow-up que mantém o cliente envolvido sem soar insistente.',
-    prompt:`You are a senior consultant. Write a professional follow-up email to a client.
+    prompt:`You are a senior environmental and sustainability consultant writing a professional follow-up email to a client. Bilingual context (Portuguese client base, EN technical correspondence common).
 
-Context: [WHAT WAS DISCUSSED IN LAST CONTACT]
+Context: [WHAT WAS DISCUSSED IN LAST CONTACT — e.g., proposal sent, draft delivered, decision point pending, public consultation outcome]
 Time since last contact: [e.g., 2 weeks]
-Your goal with this email: [e.g., re-engage, request decision, share update]
-Client relationship: [e.g., new, established, sensitive]
+Your goal with this email: [e.g., re-engage cold trail, request technical decision, share regulatory development, escalate timing concern]
+Client relationship: [e.g., new and exploratory, established and warm, contractually delicate, post-deliverable]
+Client seniority: [e.g., technical counterpart, project manager, C-level sustainability officer, legal/compliance counsel]
+Output language: [PT or EN]
 
 Requirements:
-- Subject line that gets opened (not generic)
-- Opening that doesn't apologise for the delay
-- Body: state purpose clearly, provide value (insight, update, useful resource)
-- Close: specific call-to-action with proposed next step
+- Subject line that gets opened (not generic) — reference the project name, not just "follow-up"
+- Opening that doesn't apologise for the delay; if delay was ours, name it briefly and move on
+- Body: state purpose clearly, provide value — a regulatory development relevant to their project (CSRD timing, EU Taxonomy update, RJIA amendment), a useful publication, an insight from another anonymised engagement
+- Close: specific call-to-action with proposed next step (a 30-min call, a written decision by date, a document review)
 - Length: 120-180 words
-- Tone: warm but professional, respects client's time`
+- Tone: warm but professional, respects client's time, signals you've kept thinking about their project`
   },
   {
     id:'st-c2', cat:'comunicacao', type:'one',
     title:'Resposta a comentários adversos do cliente',
     author:'Arranque',
     desc:'Resposta diplomática que mantém posição técnica sem confrontar o cliente.',
-    prompt:`You are a senior consultant. The client has pushed back on our recommendation. Write a diplomatic response that maintains our technical position.
+    prompt:`You are a senior environmental and sustainability consultant. The client has pushed back on our technical recommendation. Write a diplomatic response that maintains our position without escalating tension.
 
 Our original recommendation: [BRIEF DESCRIPTION]
-Client's objection: [WHAT THEY SAID OR IMPLIED]
-Our technical basis: [WHY WE STAND BY IT]
-Risk if client overrides our recommendation: [WHAT COULD GO WRONG]
+Technical basis for the recommendation: [REGULATORY OR METHODOLOGICAL ANCHOR — e.g., Habitats Directive Article 6(3), ESRS E4 disclosure requirement, GHG Protocol Scope 3 boundary, BAT conclusion, RJIA Annex III screening criteria]
+Client's objection: [WHAT THEY SAID — distinguish cost objection, schedule objection, technical disagreement, optics concern]
+Underlying client concern: [WHAT THEY ACTUALLY FEAR — often differs from what they said]
+Risk if client overrides our recommendation: [QUANTIFY: permit refusal, disclosure non-compliance, reputational risk, financial exposure, project delay]
+Our liability exposure if we accept their override: [PROFESSIONAL LIABILITY, contractual carve-out needed?]
+Output language: [PT or EN]
 
 Requirements:
-- Acknowledge the client's concern genuinely (not defensively)
-- Restate our recommendation with the strongest 1-2 reasons
-- Make the risk of NOT following our recommendation concrete and quantified if possible
-- Offer one middle-ground option if appropriate
-- End with respect for client's final decision authority
+- Acknowledge the client's concern genuinely — paraphrase what they actually fear, not what they said
+- Restate our recommendation with the regulatory or methodological anchor (Article X of Directive Y, paragraph N of standard Z) — let the standard do the heavy lifting, not your personal opinion
+- Make the risk concrete: name the regulator (APA, ICNF, CCDR), name the disclosure framework, name the financier covenant — be specific about which third party will notice if the recommendation is ignored
+- Offer a middle-ground option if appropriate — phased approach, conditional decision, additional data collection to de-risk
+- End with respect for the client's final decision authority, but be explicit about what changes in the deliverable if they override (e.g., "if you proceed without [X], we will reflect the residual risk in the conclusion of the report")
 - Length: 200-280 words
-- Tone: confident, respectful, NOT confrontational`
+- Tone: confident, respectful, NOT confrontational, NOT capitulating`
   },
   {
     id:'st-c3', cat:'comunicacao', type:'cot',
     title:'Preparação para reunião difícil',
     author:'Arranque',
     desc:'Plano passo-a-passo para reuniões com stakeholders céticos ou hostis.',
-    prompt:`You are a senior consultant preparing for a difficult stakeholder meeting. Think through the preparation step by step.
+    prompt:`You are a senior environmental and sustainability consultant preparing for a difficult stakeholder meeting. Think through the preparation step by step.
 
-Meeting purpose: [WHAT NEEDS TO BE ACHIEVED]
-Stakeholders attending: [WHO + THEIR LIKELY POSITION]
-The hard message you need to deliver: [WHAT WILL BE UNCOMFORTABLE]
-Outcome you need: [SPECIFIC DECISION OR COMMITMENT]
+Meeting context: [WHO CALLED IT, WHERE, WHEN, ON WHOSE TERMS]
+Meeting purpose: [WHAT NEEDS TO BE ACHIEVED — e.g., land permit refusal pre-empted, RJIA public consultation outcome, regulator clarification, community concern response, client decision on costly mitigation]
+Stakeholders attending: [WHO + THEIR LIKELY POSITION — distinguish: regulator (APA, ICNF, CCDR, ERSAR), promoter, opposition NGO, affected community representative, municipal officer, press]
+The hard message you need to deliver: [WHAT WILL BE UNCOMFORTABLE — distinguish bad data, regulatory non-compliance, methodological limitation, recommendation against client preference]
+Outcome you need: [SPECIFIC DECISION OR COMMITMENT — not "good meeting" but "X signs off on Y by Z"]
 
-Walk through your preparation:
-1. What is each stakeholder's biggest underlying concern? (not what they'll say, what they actually fear)
-2. What's the strongest version of their counter-argument? Steel-man it.
-3. What 2-3 facts could change their position if delivered well?
-4. What concession could you offer that costs us little but signals respect?
-5. If the meeting goes badly, what's your fallback to keep progress alive?
-6. Draft the opening 60 seconds — exactly what you'll say first
+Walk through your preparation step by step:
+1. UNDERLYING CONCERN — what is each stakeholder's biggest underlying concern? Not what they will say (their public position) but what they actually fear (loss of credibility, political pressure, financial exposure, community anger). Name it explicitly.
+2. STEEL-MAN — write out the strongest version of each stakeholder's counter-argument. If you cannot make their case persuasively, you are not ready to answer it.
+3. EVIDENCE FOR MOVEMENT — what 2-3 facts could shift their position if delivered well? These must be specific (a measured value, a regulatory precedent, a quantified risk) — not opinions.
+4. CONCESSION DESIGN — what concession could you offer that costs us little but signals respect? (Additional monitoring, phased delivery, joint site visit, written follow-up)
+5. RED LINE — what is the position you cannot move from without compromising professional integrity or regulatory defensibility? Name it before the meeting, not during.
+6. BAD-MEETING FALLBACK — if the meeting goes off the rails, what is your pre-agreed fallback to keep progress alive? (Written follow-up by date, escalation to a different forum, pause and re-engage with a different stakeholder)
+7. OPENING 60 SECONDS — draft the exact words you will say first. The opening sets the temperature for the whole meeting. State the purpose, acknowledge the difficulty, commit to listening, and signal the outcome you hope for.
 
-Be specific. Show your reasoning. Length: 500-700 words.`
+Be specific. Use [STAKEHOLDER NAME] or [STAKEHOLDER ROLE] consistently. Show your reasoning. Length: 500-700 words.`
+  },
+
+  // SUSTENTABILIDADE — ESG / CSRD / GHG / EU TAXONOMY (integrados nas categorias existentes)
+  {
+    id:'st-r4', cat:'relatorios', type:'cot',
+    title:'CSRD — Avaliação de dupla materialidade',
+    author:'Arranque',
+    desc:'Avaliação ESRS 1 dupla materialidade (impact + financial) passo-a-passo, com mapeamento aos topical standards.',
+    prompt:`You are a senior environmental and sustainability consultant guiding a client through a CSRD double materiality assessment under ESRS 1. Walk through the assessment step by step.
+
+Client sector: [SECTOR — e.g., agro-industry, energy generation, real estate, financial services]
+Client size: [REVENUE / EMPLOYEES / GEOGRAPHIC SCOPE]
+Reporting year: [YEAR]
+Identified sustainability matters to assess: [LIST 5-10 from sector ESRS guidance or value chain mapping]
+Stakeholder groups consulted: [LIST — investors, employees, communities, regulators, suppliers, customers]
+
+For each sustainability matter, walk through:
+1. IMPACT MATERIALITY — what positive or negative impact does the client's activity have on people or environment? Consider severity, scope, irremediability and likelihood (per ESRS 1 §43).
+2. FINANCIAL MATERIALITY — what financial risks or opportunities does this matter create for the client? Consider magnitude and likelihood over short / medium / long term horizons.
+3. CONCLUSION — material from impact perspective? Material from financial perspective? (Yes / No / Borderline). Be explicit about the threshold applied.
+4. ESRS MAPPING — which ESRS topical standard(s) does this matter map to? (E1 Climate change, E2 Pollution, E3 Water and marine resources, E4 Biodiversity and ecosystems, E5 Resource use and circular economy, S1 Own workforce, S2 Workers in the value chain, S3 Affected communities, S4 Consumers and end-users, G1 Business conduct)
+
+Output:
+- Consolidated list of material matters with the ESRS standards triggered
+- Items flagged [VERIFY] where assumptions about thresholds, value chain reach, or stakeholder input need client confirmation
+- Suggested next steps for disclosure preparation, including which datapoints will need to be collected by reporting deadline
+
+Tone: rigorous, methodological — the voice of someone who has defended materiality conclusions under audit. Show your reasoning. Length: 800-1200 words.`
+  },
+  {
+    id:'st-d4', cat:'dados', type:'one',
+    title:'GHG Protocol — Categorização Scope 1/2/3',
+    author:'Arranque',
+    desc:'Classifica uma actividade no Scope e categoria correctos do GHG Protocol, com fontes de factores de emissão.',
+    prompt:`You are a senior environmental and sustainability consultant supporting a client with GHG Protocol inventory categorization. Classify the activity below into the correct Scope and category.
+
+Activity description: [DESCRIBE THE EMISSION-GENERATING ACTIVITY]
+Reporting entity: [COMPANY NAME OR DESCRIPTION]
+Operational boundary chosen: [equity share / financial control / operational control — per GHG Protocol Corporate Standard Chapter 3]
+Reporting year: [YEAR]
+Geographic scope: [PT / Iberian / EU / global]
+
+Provide:
+1. SCOPE — 1 (direct emissions from owned/controlled sources), 2 (indirect from purchased energy), or 3 (other indirect — value chain).
+2. CATEGORY — for Scope 3, identify the relevant category 1-15 per the Corporate Value Chain (Scope 3) Standard. For Scope 2, distinguish location-based vs market-based reporting.
+3. RATIONALE — explain why this Scope and category apply, citing the GHG Protocol guidance (Corporate Standard chapter, or relevant FAQ).
+4. DATA NEEDED — list the activity data (kWh, litres of fuel, tonne-km, spend, employee count) and emission factors required.
+5. RECOMMENDED EMISSION FACTOR SOURCE — point to a recognised database (DEFRA UK Government GHG Conversion Factors, EPA, IEA, ecoinvent, ADEME Base Empreinte, EXIOBASE for spend-based) — note the latest available year.
+6. COMMON PITFALLS — flag boundary errors, double-counting risks, or conversion mistakes specific to this activity.
+7. [VERIFY] — any classification that depends on contractual or operational details to confirm with the client (e.g., who holds the lease, who operates the asset, supplier-specific factors vs averages).
+
+Do NOT invent emission factors. Where a factor must be cited, point to the recognised source and the year. If the client's accounting framework requires ISO 14064-1 alignment in addition to GHG Protocol, note where the two diverge.
+
+Length: 250-400 words.`
+  },
+  {
+    id:'st-r5', cat:'relatorios', type:'cot',
+    title:'Taxonomia EU — Triagem de alinhamento',
+    author:'Arranque',
+    desc:'Assessment EU Taxonomy passo-a-passo: eligibility, substantial contribution, DNSH, minimum safeguards.',
+    prompt:`You are a senior environmental and sustainability consultant assessing whether an economic activity is EU Taxonomy aligned under Regulation (EU) 2020/852 and applicable Delegated Acts. Reason step by step.
+
+Activity description: [DESCRIBE THE ECONOMIC ACTIVITY]
+NACE code or estimate: [IF KNOWN]
+Reporting entity type: [non-financial undertaking under CSRD / financial undertaking under SFDR / Article 8 disclosure / Article 9 product]
+Reporting year: [YEAR]
+Applicable Delegated Acts: [Climate Delegated Act (EU) 2021/2139 / Environmental Delegated Act (EU) 2023/2486 / both — note the most recent amendments]
+
+Walk through the assessment:
+1. ELIGIBILITY — is the activity included in the Taxonomy (i.e., listed in one of the Annexes of the Climate or Environmental Delegated Acts)? Cite the specific Annex section and activity number.
+2. SUBSTANTIAL CONTRIBUTION — does the activity meet the Technical Screening Criteria for at least one of the six environmental objectives (climate change mitigation, climate change adaptation, sustainable use of water and marine resources, transition to circular economy, pollution prevention and control, protection and restoration of biodiversity and ecosystems)? Identify which objective and which specific criteria apply.
+3. DO NO SIGNIFICANT HARM (DNSH) — for each of the five remaining objectives, does the activity avoid significant harm? Use the Annexes' generic DNSH criteria + any activity-specific DNSH criteria.
+4. MINIMUM SAFEGUARDS — does the entity comply with OECD MNE Guidelines, UN Guiding Principles on Business and Human Rights, ILO core conventions, and the International Bill of Human Rights? This is binary at entity level, not activity level.
+5. CONCLUSION — Eligible? Aligned? Partially aligned (specify which criteria are met and which are not)?
+
+Use [VERIFY] for any criterion where you need additional client data or where the regulatory text may have been amended since your last reading. Do NOT invent thresholds — cite from the relevant Delegated Act Annex and flag [VERIFY] if uncertain about current revisions.
+
+Length: 600-900 words. Tone: rigorous and conservative — the voice of someone who knows that aligned claims are subject to audit. End with a list of data the client must provide to finalise the assessment.`
   }
 ];
 
@@ -1838,6 +1970,7 @@ let currentFilter = 'all', currentSort = 'score', currentSearch = '';
 let currentSlide = 1;
 const LOCAL_KEY = 'prompt2c_local_v3';
 const WELCOME_KEY = 'prompt2c_welcome_seen_v1';
+const MY_PROMPTS_KEY = 'prompt2c_my_prompts_v1';
 
 function loadLocal() {
   try { const s=localStorage.getItem(LOCAL_KEY); if(s){const d=JSON.parse(s);myVotes=d.v||{};myStars=d.s||{};} } catch(e){}
@@ -1845,13 +1978,18 @@ function loadLocal() {
 function saveLocal() {
   try { localStorage.setItem(LOCAL_KEY, JSON.stringify({v:myVotes,s:myStars})); } catch(e){}
 }
+function loadMyPrompts() {
+  try { const s=localStorage.getItem(MY_PROMPTS_KEY); return s ? JSON.parse(s) : {}; } catch(e){ return {}; }
+}
+function saveMyPrompts(myPrompts) {
+  try { localStorage.setItem(MY_PROMPTS_KEY, JSON.stringify(myPrompts)); } catch(e){}
+}
 
 // ════════════════════════════════════════
 // DB
 // ════════════════════════════════════════
 async function loadDB() {
-  if (!DB_READY) { prompts=[...STARTERS]; setDbStatus('offline'); return; }
-  setDbStatus('connecting');
+  if (!DB_READY) { prompts=[...STARTERS]; return; }
   try {
     let rows = await sb.select('prompts','?order=score.desc');
     if (!rows.length) {
@@ -1863,10 +2001,9 @@ async function loadDB() {
       const acts = await sb.select('activity','?order=created_at.desc&limit=15');
       activity = acts.map(a=>({icon:a.icon,text:a.text,time:timeAgo(a.created_at)}));
     } catch(e){}
-    setDbStatus('ok');
   } catch(e) {
+    console.error('Erro a carregar DB:', e);
     prompts = [...STARTERS];
-    setDbStatus('error');
   }
 }
 
@@ -1887,14 +2024,6 @@ function toDb(p) {
     score:p.score||0, stars:p.stars||0, star_count:p.starCount||0,
     prompt:p.prompt, output:p.output||'', link:p.link||''
   };
-}
-
-function setDbStatus(state) {
-  const el = document.getElementById('db-status');
-  if (state==='ok')          { el.textContent='conectado'; el.style.color='var(--accent)'; }
-  else if(state==='offline') { el.textContent='offline';   el.style.color='var(--gold)'; }
-  else if(state==='error')   { el.textContent='erro de ligação'; el.style.color='var(--warn)'; }
-  else                       { el.textContent='a ligar…';  el.style.color='var(--text-dim)'; }
 }
 
 async function logActivity(icon, text) {
@@ -1937,6 +2066,7 @@ function renderFeed() {
   }
   const nonStarter = prompts.filter(p=>!p.isStarter);
   const maxScore = nonStarter.length ? Math.max(...nonStarter.map(p=>p.score)) : -Infinity;
+  const myPrompts = loadMyPrompts();
 
   const catNames = {
     propostas:'Propostas', apresentacoes:'Apresentações', relatorios:'Relatórios',
@@ -1955,6 +2085,7 @@ function renderFeed() {
     ).join('');
     const phCount = countPlaceholders(p.prompt);
     const tier = isGold ? 'gold-tier' : (isStarter ? 'starter' : '');
+    const isMine = !!myPrompts[p.id];
 
     let outputBlock = '';
     if (p.output || p.link) {
@@ -1992,7 +2123,7 @@ function renderFeed() {
     <button class="btn-sm" onclick="togglePrev('${p.id}',this)">Ver prompt</button>
     <button class="btn-sm" onclick="copyCard('${p.id}',this)">Copiar prompt</button>
     <span class="rating-info">★ ${p.stars.toFixed(1)} · ${p.starCount} avaliação${p.starCount!==1?'ões':''}</span>
-    <button class="btn-sm report" onclick="reportPrompt('${p.id}','${esc(p.title).replace(/'/g,"&apos;")}')" title="Reportar">⚐</button>
+    ${isMine ? `<button class="btn-sm delete" onclick="deletePrompt('${p.id}')" title="Eliminar este prompt">🗑 Eliminar</button>` : ''}
   </div>
 </div>`;
   }).join('');
@@ -2110,12 +2241,36 @@ function jumpTo(id) {
   setTimeout(() => { const el = document.getElementById('card-'+id); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); }, 120);
 }
 
-function reportPrompt(id, title) {
-  if (confirm(`Reportar o prompt "${title}" como inadequado?\n\nA equipa será notificada para rever.`)) {
-    logActivity('🚩', `Prompt "${title}" foi reportado`);
-    renderActivity();
-    showToast('🚩 Prompt reportado — obrigado');
+// ════════════════════════════════════════
+// DELETE (self-delete via localStorage token)
+// ════════════════════════════════════════
+async function deletePrompt(id) {
+  const myPrompts = loadMyPrompts();
+  if (!myPrompts[id]) {
+    showToast('⚠ Só podes eliminar prompts que tu próprio submeteste neste browser');
+    return;
   }
+  const p = prompts.find(x => x.id === id);
+  if (!p) return;
+
+  if (!confirm(`Eliminar o prompt "${p.title}"?\n\nEsta acção não pode ser desfeita.`)) return;
+
+  if (DB_READY) {
+    try {
+      await sb.delete('prompts', {id});
+    } catch(e) {
+      console.error('Erro a eliminar:', e);
+      showToast('⚠ Erro a eliminar — tenta novamente');
+      return;
+    }
+  }
+
+  prompts = prompts.filter(x => x.id !== id);
+  delete myPrompts[id];
+  saveMyPrompts(myPrompts);
+  await logActivity('🗑', `Prompt "${p.title}" foi eliminado`);
+  renderAll();
+  showToast('🗑 Prompt eliminado');
 }
 
 // ════════════════════════════════════════
@@ -2140,6 +2295,10 @@ async function submitPrompt() {
   const newP = { id, title, author, desc: desc||'Prompt da equipa.', cat, type, score:0, stars:0, starCount:0, ts:Date.now(), prompt, output, link, isStarter:false };
   if(DB_READY) try{ await sb.insert('prompts', toDb(newP)); }catch(e){ console.error(e); }
   prompts.unshift(newP);
+  // guarda token local — só este browser poderá eliminar este prompt via UI
+  const myPrompts = loadMyPrompts();
+  myPrompts[id] = Date.now();
+  saveMyPrompts(myPrompts);
   await logActivity('🌱', `${author} partilhou "${title}"`);
   ['f-author','f-title','f-desc','f-prompt','f-output','f-link'].forEach(i => document.getElementById(i).value = '');
   currentSort = 'newest'; document.querySelector('.sort-select').value = 'newest';
