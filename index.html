@@ -572,6 +572,11 @@ nav {
 .cat-tag.dados         { border-color: rgba(255,140,90,0.5);  color: var(--warn); }
 .cat-tag.excel         { border-color: rgba(120,200,80,0.5);  color: #88c850; }
 .cat-tag.comunicacao   { border-color: rgba(200,100,230,0.4); color: #c878e6; }
+.cat-tag.financeiro    { border-color: rgba(90,159,245,0.5);  color: #5a9ff5; }
+.cat-tag.contabilidade { border-color: rgba(155,140,240,0.5); color: #9b8cf0; }
+.cat-tag.comercial     { border-color: rgba(245,160,74,0.5);  color: #f5a04a; }
+.cat-tag.marketing     { border-color: rgba(245,122,176,0.45);color: #f57ab0; }
+.cat-tag.rh            { border-color: rgba(78,207,176,0.45);  color: #4ecfb0; }
 .cat-tag.outro         { border-color: rgba(150,150,150,0.4); color: var(--text-muted); }
 
 [data-theme="light"] .cat-tag.relatorios { color: var(--c-dark); border-color: rgba(0,68,61,0.5); }
@@ -1018,7 +1023,7 @@ nav {
           <div class="mockup-desc">Replica o estilo de SOW da empresa usando 2 exemplos como referência.</div>
         </div>
       </div>
-      <div class="mockup-prompt">You are a senior consultant drafting scopes of work. Study the two examples below and generate a new SOW in the exact same style…</div>
+      <div class="mockup-prompt">És um consultor sénior a redigir cadernos de encargos. Estuda os dois exemplos abaixo e gera um novo caderno de encargos exactamente no mesmo estilo…</div>
       <div class="mockup-stars">
         <span class="mockup-star">★</span><span class="mockup-star">★</span><span class="mockup-star">★</span><span class="mockup-star">★</span><span class="mockup-star dim">★</span>
         <span style="font-family:var(--f-mono);font-size:0.6rem;color:var(--text-dim);margin-left:0.5rem">4.2 · 8 avaliações</span>
@@ -1052,11 +1057,12 @@ nav {
           </div>
           <div class="p-example">
             <p class="p-example-label">Exemplo</p>
-            <pre>You are a senior environmental consultant.
-Write an executive summary for an EIA
-proposal for a wind farm in Natura 2000
-area. Client: [CLIENT NAME]. Timeline: 8 months.
-Tone: authoritative. Length: 280-320 words.</pre>
+            <pre>És um consultor sénior de ambiente.
+Escreve um sumário executivo para uma
+proposta de EIA de um parque eólico em
+área Natura 2000. Cliente: [NOME DO CLIENTE].
+Prazo: 8 meses. Tom: autoritário.
+Extensão: 280-320 palavras.</pre>
           </div>
         </div>
       </div>
@@ -1077,17 +1083,17 @@ Tone: authoritative. Length: 280-320 words.</pre>
           </div>
           <div class="p-example">
             <p class="p-example-label">Exemplo</p>
-            <pre>Study these examples and generate a new
-SOW in the same format.
+            <pre>Estuda estes exemplos e gera um novo
+caderno de encargos no mesmo formato.
 
---- EXAMPLE 1 ---
-Project: Coastal restoration, Galicia
-1. Baseline survey — Weeks 1-4
-2. Stakeholder consultation — Weeks 3-5
+--- EXEMPLO 1 ---
+Projecto: Restauro costeiro, Galiza
+1. Levantamento de base — Semanas 1-4
+2. Consulta a partes interessadas — Semanas 3-5
 ...
 
---- NEW PROJECT ---
-Project: [NAME]</pre>
+--- NOVO PROJECTO ---
+Projecto: [NOME]</pre>
           </div>
         </div>
       </div>
@@ -1108,15 +1114,15 @@ Project: [NAME]</pre>
           </div>
           <div class="p-example">
             <p class="p-example-label">Exemplo</p>
-            <pre>You are a senior consultant. Analyse this
-compliance scenario step by step:
+            <pre>És um consultor sénior. Analisa este
+cenário de conformidade passo a passo:
 
-1. First, identify all applicable regulations
-2. Then, assess current state vs each requirement
-3. Then, rank gaps by severity and effort
-4. Finally, propose a prioritised action plan
+1. Primeiro, identifica toda a regulação aplicável
+2. Depois, avalia o estado actual face a cada requisito
+3. Depois, ordena as lacunas por severidade e esforço
+4. Por fim, propõe um plano de acção priorizado
 
-Explain your reasoning at each step.</pre>
+Explica o teu raciocínio em cada passo.</pre>
           </div>
         </div>
       </div>
@@ -1139,6 +1145,11 @@ Explain your reasoning at each step.</pre>
     <button class="filter-btn" onclick="setFilter('dados',this)">Dados</button>
     <button class="filter-btn" onclick="setFilter('excel',this)">Excel</button>
     <button class="filter-btn" onclick="setFilter('comunicacao',this)">Comunicação</button>
+    <button class="filter-btn" onclick="setFilter('financeiro',this)">Financeiro</button>
+    <button class="filter-btn" onclick="setFilter('contabilidade',this)">Contabilidade</button>
+    <button class="filter-btn" onclick="setFilter('comercial',this)">Comercial</button>
+    <button class="filter-btn" onclick="setFilter('marketing',this)">Marketing</button>
+    <button class="filter-btn" onclick="setFilter('rh',this)">RH</button>
     <select class="sort-select" onchange="setSort(this.value)">
       <option value="score">↑ Mais votados</option>
       <option value="newest">⏱ Mais recentes</option>
@@ -1185,7 +1196,7 @@ Explain your reasoning at each step.</pre>
         </div>
         <div class="incentive-item">
           <div class="incentive-icon">🌍</div>
-          <span>Escreve o prompt em <strong>inglês</strong> — poupa tokens e gera melhores resultados</span>
+          <span>Escreve o prompt em <strong>português</strong> — alinhado com a equipa e com o output que entregamos</span>
         </div>
         <div class="incentive-item">
           <div class="incentive-icon">🔄</div>
@@ -1220,6 +1231,11 @@ Explain your reasoning at each step.</pre>
               <option value="dados">Análise de Dados</option>
               <option value="excel">Excel & Sheets</option>
               <option value="comunicacao">Comunicação Cliente</option>
+              <option value="financeiro">Financeiro</option>
+              <option value="contabilidade">Contabilidade</option>
+              <option value="comercial">Comercial</option>
+              <option value="marketing">Marketing</option>
+              <option value="rh">RH</option>
               <option value="outro">Outro</option>
             </select>
           </div>
@@ -1246,8 +1262,8 @@ Explain your reasoning at each step.</pre>
         </div>
 
         <div class="fg">
-          <label class="fl">O prompt <span class="fl-hint">— em inglês, com [PLACEHOLDERS]</span></label>
-          <textarea class="ft" id="f-prompt" placeholder="You are a senior consultant…"></textarea>
+          <label class="fl">O prompt <span class="fl-hint">— em português, com [PLACEHOLDERS]</span></label>
+          <textarea class="ft" id="f-prompt" placeholder="És um consultor sénior…"></textarea>
         </div>
 
         <div class="fg">
@@ -1347,7 +1363,7 @@ Explain your reasoning at each step.</pre>
         <div class="welcome-tips">
           <div class="welcome-tip">
             <span class="welcome-tip-icon">🌍</span>
-            <span class="welcome-tip-text"><strong>Em inglês</strong> — gera melhores resultados e poupa tokens</span>
+            <span class="welcome-tip-text"><strong>Em português</strong> — alinhado com a equipa e com o trabalho que entregamos</span>
           </div>
           <div class="welcome-tip">
             <span class="welcome-tip-icon">🔒</span>
@@ -1418,76 +1434,76 @@ const STARTERS = [
     title:'Resumo Executivo de Proposta',
     author:'Arranque',
     desc:'Gera um resumo executivo profissional para qualquer proposta de consultoria.',
-    prompt:`You are a senior environmental and sustainability consultant with 15+ years of experience advising private and public clients in the Iberian Peninsula. Write a professional executive summary for a consulting proposal with the following context.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade com mais de 15 anos de experiência a assessorar clientes privados e públicos na Península Ibérica. Escreve um resumo executivo profissional para uma proposta de consultoria com o seguinte contexto.
 
-Project: [PROJECT NAME]
-Client type: [promoter / financial institution / public authority / operator]
-Scope: [2-3 sentence description of what is being delivered]
-Primary regulatory framework: [e.g., RJIA, EU Habitats Directive 92/43/EEC, Water Framework Directive 2000/60/EC, ESRS E1, EU Taxonomy Regulation 2020/852, IED 2010/75/EU, sectoral standard]
-Methodological reference: [e.g., GHG Protocol Corporate Standard, ISO 14064-1, DEFRA Biodiversity Metric, sector BAT conclusions]
-Proposed timeline: [X months]
-Key deliverables: [list 3-4]
+Projecto: [NOME DO PROJECTO]
+Tipo de cliente: [promotor / instituição financeira / autoridade pública / operador]
+Âmbito: [descrição em 2-3 frases do que será entregue]
+Enquadramento regulatório principal: [ex.: RJIA, Habitats Directive 92/43/EEC, Water Framework Directive 2000/60/EC, ESRS E1, EU Taxonomy Regulation 2020/852, IED 2010/75/EU, norma sectorial]
+Referência metodológica: [ex.: GHG Protocol Corporate Standard, ISO 14064-1, DEFRA Biodiversity Metric, conclusões BAT do sector]
+Cronograma proposto: [X meses]
+Entregáveis-chave: [lista 3-4]
 
-Requirements:
-- Tone: authoritative, evidence-based, concise — the voice of someone who has defended assessments before APA, CCDR or sectoral regulators
-- Length: 250-350 words
-- Foreground regulatory exposure and the downstream cost of getting it wrong (delays, legal challenge, reputational risk, RECAPE)
-- Highlight specific methodological choices that distinguish a defensible assessment from a tick-box one
-- End with a clear statement of how our approach reduces client regulatory and delivery risk
+Requisitos:
+- Tom: autoritário, baseado em evidência, conciso — a voz de quem já defendeu avaliações perante a APA, CCDR ou reguladores sectoriais
+- Extensão: 250-350 palavras
+- Coloca em primeiro plano a exposição regulatória e o custo a jusante de errar (atrasos, contestação jurídica, risco reputacional, RECAPE)
+- Realça escolhas metodológicas específicas que distinguem uma avaliação defensável de uma feita por checklist
+- Termina com uma afirmação clara de como a nossa abordagem reduz o risco regulatório e de execução do cliente
 
-Do NOT invent specific past projects, fees, or named clients. Use [CONFIRM] for fees, timelines or deliverable counts.`
+NÃO inventes projectos passados específicos, honorários ou clientes nomeados. Usa [CONFIRMAR] para honorários, prazos ou número de entregáveis.`
   },
   {
     id:'st-p2', cat:'propostas', type:'few',
     title:'Scope of Work no estilo da empresa',
     author:'Arranque',
     desc:'Replica o estilo de SOW da empresa usando 2 exemplos como referência.',
-    prompt:`You are a senior consultant drafting scopes of work (SOW). Study the two examples below and generate a new SOW in the exact same style and structure.
+    prompt:`És um consultor sénior a redigir scopes of work (SOW). Estuda os dois exemplos abaixo e gera um novo SOW exactamente no mesmo estilo e estrutura.
 
---- EXAMPLE 1 ---
-Project: Coastal restoration assessment, Galicia Spain
-Scope:
-1. Baseline ecological survey (flora, fauna, hydrology) — Weeks 1-4
-2. Stakeholder consultation and regulatory mapping (Natura 2000, Ramsar) — Weeks 3-5
-3. Restoration options analysis with cost-benefit modelling — Weeks 5-8
-4. Draft and final Environmental Management Plan — Weeks 9-12
-Assumptions: Client provides site access. Third-party lab analysis included.
+--- EXEMPLO 1 ---
+Projecto: Avaliação de restauro costeiro, Galiza Espanha
+Âmbito:
+1. Levantamento ecológico de base (flora, fauna, hidrologia) — Semanas 1-4
+2. Consulta a partes interessadas e mapeamento regulatório (Natura 2000, Ramsar) — Semanas 3-5
+3. Análise de opções de restauro com modelação custo-benefício — Semanas 5-8
+4. Plano de Gestão Ambiental, versão preliminar e final — Semanas 9-12
+Pressupostos: O cliente garante acesso ao local. Análise laboratorial por terceiros incluída.
 
---- EXAMPLE 2 ---
-Project: Industrial Brownfield Phase II ESA, Porto
-Scope:
-1. Review of Phase I findings and regulatory correspondence — Week 1
-2. Intrusive investigation design and contractor management — Weeks 2-4
-3. Chemical analysis and human health risk assessment — Weeks 4-7
-4. Remediation options appraisal and EA submission support — Weeks 8-10
+--- EXEMPLO 2 ---
+Projecto: ESA Fase II de brownfield industrial, Porto
+Âmbito:
+1. Revisão dos resultados da Fase I e correspondência regulatória — Semana 1
+2. Concepção da investigação intrusiva e gestão de empreiteiro — Semanas 2-4
+3. Análise química e avaliação de risco para a saúde humana — Semanas 4-7
+4. Avaliação de opções de remediação e apoio à submissão à EA — Semanas 8-10
 
---- NEW PROJECT ---
-Project: [PROJECT NAME]
-Brief: [2-3 sentence description]
+--- NOVO PROJECTO ---
+Projecto: [NOME DO PROJECTO]
+Resumo: [descrição em 2-3 frases]
 
-Generate the SOW in the same format and level of detail.`
+Gera o SOW no mesmo formato e nível de detalhe.`
   },
   {
     id:'st-p3', cat:'propostas', type:'one',
     title:'Justificação de Honorários',
     author:'Arranque',
     desc:'Narrativa confiante de fees, focada em valor, sem soar defensiva.',
-    prompt:`You are a senior environmental and sustainability consultant defending a fee proposal where the client is likely to compare against a lower-cost competitor. Write a professional fee justification narrative for inclusion in a proposal.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade a defender uma proposta de honorários em que o cliente irá provavelmente comparar com um concorrente de custo inferior. Escreve uma narrativa profissional de justificação de honorários para incluir numa proposta.
 
-Total fee: [AMOUNT + CURRENCY]
-Project type: [e.g., EIA Phase A scoping, ESRS E1 climate disclosure, Biodiversity Net Gain calculation, Natura 2000 Appropriate Assessment, GHG inventory verification, environmental due diligence]
-Key cost drivers: [e.g., specialist fieldwork in sensitive habitats, multi-season survey effort, regulatory liaison with APA / ICNF / CCDR, stakeholder engagement, specialist sub-consultant fees, lab analysis]
-Competitive context: [e.g., client comparing against generalist consultancy or in-house team]
-Risk if delivered cheaply: [e.g., reopening of public consultation, RECAPE rejection, project delay, withdrawal of permit, financier covenant breach]
+Honorário total: [VALOR + MOEDA]
+Tipo de projecto: [ex.: EIA Fase A scoping, ESRS E1 divulgação climática, cálculo de Biodiversity Net Gain, Natura 2000 Appropriate Assessment, verificação de inventário GHG, due diligence ambiental]
+Principais drivers de custo: [ex.: trabalho de campo especializado em habitats sensíveis, esforço de amostragem multi-estação, articulação regulatória com APA / ICNF / CCDR, envolvimento de partes interessadas, honorários de subconsultores especialistas, análise laboratorial]
+Contexto competitivo: [ex.: cliente a comparar com consultora generalista ou equipa interna]
+Risco se entregue a baixo custo: [ex.: reabertura de consulta pública, rejeição de RECAPE, atraso do projecto, retirada de licença, incumprimento de covenant de financiador]
 
-Requirements:
-- Tone: confident, value-focused, NOT defensive — the voice of someone who has seen projects unravel from under-scoped assessments
-- Length: 150-200 words
-- Format: flowing professional prose — no bullet points
-- Emphasis: regulatory risk reduction (avoid permit refusal, RECAPE, withdrawal); the long-term cost of mitigation imposed by a regulator vs. designed in early; the team's track record with the specific regulator
-- Acknowledge the competitor without naming or denigrating; reframe the conversation on value, not unit price
+Requisitos:
+- Tom: confiante, focado em valor, NÃO defensivo — a voz de quem já viu projectos desmoronarem por avaliações sub-dimensionadas
+- Extensão: 150-200 palavras
+- Formato: prosa profissional corrida — sem bullet points
+- Ênfase: redução do risco regulatório (evitar recusa de licença, RECAPE, retirada); o custo a longo prazo de mitigação imposta por um regulador vs. concebida cedo; o historial da equipa com o regulador específico
+- Reconhece o concorrente sem o nomear ou denegrir; reorienta a conversa para o valor, não para o preço unitário
 
-Do NOT invent specific past projects or named clients. Use [REFER TO PRIOR WORK] where a specific track-record reference would land well.`
+NÃO inventes projectos passados específicos ou clientes nomeados. Usa [REFERIR TRABALHO ANTERIOR] onde uma referência específica de historial faria sentido.`
   },
 
   // APRESENTAÇÕES (3)
@@ -1496,78 +1512,78 @@ Do NOT invent specific past projects or named clients. Use [REFER TO PRIOR WORK]
     title:'Estrutura de slides para cliente',
     author:'Arranque',
     desc:'Gera estrutura completa slide-a-slide com bullets, notas de orador e visuais sugeridos.',
-    prompt:`You are a senior environmental and sustainability consultant preparing a client presentation. Generate a professional slide outline.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade a preparar uma apresentação para cliente. Gera uma estrutura profissional de slides.
 
-Purpose: [e.g., present EIA findings to APA, kickoff with promoter, RJIA public consultation, ESG steering committee, board sustainability briefing, ESRS materiality validation]
-Audience: [e.g., APA technical staff, CCDR officers, municipal council, affected community, C-suite, investment committee]
-Duration: [15 / 20 / 30 minutes]
-Project: [PROJECT NAME]
-Project sensitivity: [e.g., Natura 2000 site, urban brownfield, lithium mining concession, large-scale solar, infrastructure with transboundary impact]
-Key messages to convey: [list 3-4]
-Likely contentious point(s): [list 1-2 — what will be hardest to land]
+Objectivo: [ex.: apresentar resultados de EIA à APA, kickoff com promotor, consulta pública RJIA, comité de direcção ESG, briefing de sustentabilidade ao conselho, validação de materialidade ESRS]
+Audiência: [ex.: técnicos da APA, técnicos da CCDR, assembleia municipal, comunidade afectada, gestão de topo, comité de investimento]
+Duração: [15 / 20 / 30 minutos]
+Projecto: [NOME DO PROJECTO]
+Sensibilidade do projecto: [ex.: sítio Natura 2000, brownfield urbano, concessão de mineração de lítio, solar de grande escala, infra-estrutura com impacto transfronteiriço]
+Mensagens-chave a transmitir: [lista 3-4]
+Ponto(s) provavelmente controverso(s): [lista 1-2 — o que será mais difícil de passar]
 
-For each slide provide:
-- Slide number and title
-- 3-4 bullet points (concise — landing on findings and implications, not process)
-- Speaker notes (2-3 sentences — what you actually say, including how to pre-empt the contentious points)
-- Suggested visual (chart type, GIS map, photo, diagram, comparison table)
-- Risk flag: any slide where the audience could derail the meeting
+Para cada slide indica:
+- Número e título do slide
+- 3-4 bullet points (concisos — focados em resultados e implicações, não em processo)
+- Notas de orador (2-3 frases — o que dizes efectivamente, incluindo como antecipar os pontos controversos)
+- Visual sugerido (tipo de gráfico, mapa SIG, fotografia, diagrama, tabela comparativa)
+- Sinal de risco: qualquer slide onde a audiência possa descarrilar a reunião
 
-Total slides: 10-14. Structure:
-1. Title + project context
-2. Agenda (audience-tailored)
-3. Regulatory or methodological framing (1-2 slides)
-4. Findings (3-5 slides — data + interpretation, never raw data alone)
-5. Recommendations (with rationale, not just instruction)
-6. Risks of not acting on recommendations
-7. Next steps and the decision asked of the audience
-8. Q&A holding slide
+Total de slides: 10-14. Estrutura:
+1. Título + contexto do projecto
+2. Agenda (adaptada à audiência)
+3. Enquadramento regulatório ou metodológico (1-2 slides)
+4. Resultados (3-5 slides — dados + interpretação, nunca dados em bruto isolados)
+5. Recomendações (com fundamentação, não apenas instrução)
+6. Riscos de não actuar sobre as recomendações
+7. Próximos passos e a decisão pedida à audiência
+8. Slide de espera para Q&A
 
-Tone: authoritative for technical audiences, accessible without dumbing down for non-technical. Match the regulatory register the audience expects.`
+Tom: autoritário para audiências técnicas, acessível sem simplificar em excesso para não técnicos. Adequa o registo regulatório ao que a audiência espera.`
   },
   {
     id:'st-a2', cat:'apresentacoes', type:'few',
     title:'Narrativa de slides — Few-Shot',
     author:'Arranque',
     desc:'Treina o modelo no teu estilo de narrativa de slide a partir de 2 exemplos.',
-    prompt:`You are a senior consultant. Study these slide narrative examples and write a new one in the same style.
+    prompt:`És um consultor sénior. Estuda estes exemplos de narrativa de slide e escreve um novo no mesmo estilo.
 
---- EXAMPLE 1 ---
-Headline: Air quality remains within thresholds — but trend warrants monitoring
-Body: Modelled NO₂ at the nearest sensitive receptor is 28 µg/m³ — within the 40 µg/m³ annual mean objective. However, a 12% increase from baseline warrants a continuous monitoring condition. Recommendation: quarterly monitoring for 24 months post-construction.
+--- EXEMPLO 1 ---
+Título: Qualidade do ar mantém-se dentro dos limiares — mas a tendência justifica monitorização
+Corpo: O NO₂ modelado no receptor sensível mais próximo é 28 µg/m³ — dentro do objectivo de média anual de 40 µg/m³. Contudo, um aumento de 12% face à base justifica uma condição de monitorização contínua. Recomendação: monitorização trimestral durante 24 meses após a construção.
 
---- EXAMPLE 2 ---
-Headline: Proposed habitat creation delivers 18% biodiversity net gain
-Body: Using the DEFRA 3.1 Metric, the scheme delivers 18% BNG against a mandatory 10% threshold. Wildflower grassland creation (2.4 ha) and hedgerow planting (340 m) are the primary gain drivers. Secured through a 30-year legal agreement.
+--- EXEMPLO 2 ---
+Título: A criação de habitat proposta entrega 18% de biodiversity net gain
+Corpo: Usando a DEFRA 3.1 Metric, o projecto entrega 18% de BNG face ao limiar obrigatório de 10%. A criação de prado de flores silvestres (2,4 ha) e a plantação de sebes (340 m) são os principais drivers de ganho. Assegurado através de um acordo legal de 30 anos.
 
---- NEW SLIDE ---
-Topic: [YOUR TOPIC]
-Key data points: [2-3 DATA POINTS]
+--- NOVO SLIDE ---
+Tema: [O TEU TEMA]
+Pontos de dados-chave: [2-3 PONTOS DE DADOS]
 
-Write the slide headline and body in the same style. Be specific, data-driven, end with a clear implication.`
+Escreve o título e o corpo do slide no mesmo estilo. Sê específico, orientado a dados, e termina com uma implicação clara.`
   },
   {
     id:'st-a3', cat:'apresentacoes', type:'cot',
     title:'Argumentação para steering committee',
     author:'Arranque',
     desc:'Constrói argumentação fundamentada passo-a-passo para apresentações de alto risco.',
-    prompt:`You are a senior environmental and sustainability consultant preparing to defend a recommendation at a steering committee. Walk through your argumentation step by step.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade a preparar a defesa de uma recomendação perante um steering committee. Percorre a tua argumentação passo a passo.
 
-Context: [PROJECT DESCRIPTION AND DECISION POINT]
-Your recommendation: [STATE THE RECOMMENDATION — e.g., adopt a costlier mitigation, redesign to avoid impact, delay submission to gather more data, escalate to client legal team]
-Likely objections from stakeholders: [LIST 2-3 — distinguish budget objections, schedule objections, optics objections]
-Regulatory exposure if recommendation is rejected: [WHAT'S THE LEGAL / PERMIT / DISCLOSURE RISK?]
-Reputational exposure if recommendation is rejected: [STAKEHOLDERS, COMMUNITY, INVESTOR-FACING?]
+Contexto: [DESCRIÇÃO DO PROJECTO E PONTO DE DECISÃO]
+A tua recomendação: [INDICA A RECOMENDAÇÃO — ex.: adoptar uma mitigação mais cara, redesenhar para evitar impacto, adiar a submissão para recolher mais dados, escalar para a equipa jurídica do cliente]
+Objecções prováveis das partes interessadas: [LISTA 2-3 — distingue objecções de orçamento, de calendário, de imagem]
+Exposição regulatória se a recomendação for rejeitada: [QUAL O RISCO LEGAL / DE LICENÇA / DE DIVULGAÇÃO?]
+Exposição reputacional se a recomendação for rejeitada: [PARTES INTERESSADAS, COMUNIDADE, FACE A INVESTIDORES?]
 
-Build the argument step by step:
-1. FRAME — reframe the decision in the committee's own KPIs (project IRR, permit timeline, reputational risk, disclosure obligation) — not in environmental jargon
-2. EVIDENCE — present the 2-3 strongest data points supporting the recommendation, citing the regulatory or methodological standard each one anchors against
-3. OBJECTIONS — for each anticipated objection, provide a direct, respectful counter that acknowledges the legitimate concern before answering it
-4. COST OF INACTION — quantify the downside of NOT following the recommendation: delay, RECAPE, permit refusal, ESRS disclosure non-compliance, mitigation imposed by regulator at greater cost, financing conditions breached (SFDR, green bond covenants)
-5. CONCESSION — offer a concrete middle ground if appropriate (phased approach, conditional decision pending more data)
-6. ASK — close with the specific decision needed from the committee, by when, and what the consultant will do once decided
+Constrói o argumento passo a passo:
+1. ENQUADRAR — reformula a decisão nos próprios KPIs do comité (IRR do projecto, prazo de licenciamento, risco reputacional, obrigação de divulgação) — não em jargão ambiental
+2. EVIDÊNCIA — apresenta os 2-3 pontos de dados mais fortes que sustentam a recomendação, citando a norma regulatória ou metodológica que cada um ancora
+3. OBJECÇÕES — para cada objecção antecipada, dá uma resposta directa e respeitosa que reconhece a preocupação legítima antes de a responder
+4. CUSTO DA INACÇÃO — quantifica o lado negativo de NÃO seguir a recomendação: atraso, RECAPE, recusa de licença, incumprimento de divulgação ESRS, mitigação imposta pelo regulador a custo superior, condições de financiamento incumpridas (SFDR, covenants de green bond)
+5. CONCESSÃO — oferece um meio-termo concreto se apropriado (abordagem faseada, decisão condicional sujeita a mais dados)
+6. PEDIDO — fecha com a decisão específica necessária do comité, até quando, e o que o consultor fará depois de decidido
 
-Show your reasoning. Length: 400-500 words. Tone: confident but not arrogant — the voice of someone who has defended assessments under cross-examination before.`
+Mostra o teu raciocínio. Extensão: 400-500 palavras. Tom: confiante mas não arrogante — a voz de quem já defendeu avaliações sob contra-interrogatório.`
   },
 
   // RELATÓRIOS (3)
@@ -1576,83 +1592,83 @@ Show your reasoning. Length: 400-500 words. Tone: confident but not arrogant —
     title:'Sumário Não Técnico (SNT)',
     author:'Arranque',
     desc:'Capítulo de NTS em linguagem acessível ao público a partir de findings técnicos.',
-    prompt:`You are a senior consultant. Write a Non-Technical Summary (NTS) for an Environmental Impact Assessment.
+    prompt:`És um consultor sénior. Escreve um Sumário Não Técnico (NTS) para uma Avaliação de Impacte Ambiental.
 
-Project description: [2-3 sentences]
-Location: [general area, country]
-Topics assessed: [e.g., ecology, noise, air quality, heritage, hydrology]
-Significant effects identified: [list with magnitude: minor adverse, moderate adverse, significant beneficial]
-Mitigation measures: [key ones per topic]
-Residual effects after mitigation: [per topic]
+Descrição do projecto: [2-3 frases]
+Localização: [área geral, país]
+Descritores avaliados: [ex.: ecologia, ruído, qualidade do ar, património, hidrologia]
+Efeitos significativos identificados: [lista com magnitude: adverso menor, adverso moderado, benéfico significativo]
+Medidas de mitigação: [as principais por descritor]
+Efeitos residuais após mitigação: [por descritor]
 
-Requirements:
-- Plain English, no jargon — accessible to the public
-- Flowing paragraphs grouped by topic (no bullet points)
-- Length: 600-900 words
-- Brief project intro + concluding paragraph on overall significance
-- Use [PLACEHOLDER] where real figures are needed — do NOT invent data`
+Requisitos:
+- Linguagem corrente, sem jargão — acessível ao público
+- Parágrafos corridos agrupados por descritor (sem bullet points)
+- Extensão: 600-900 palavras
+- Breve introdução ao projecto + parágrafo de conclusão sobre a significância global
+- Usa [PLACEHOLDER] onde forem necessários valores reais — NÃO inventes dados`
   },
   {
     id:'st-r2', cat:'relatorios', type:'few',
     title:'Matriz de Significância — Few-Shot',
     author:'Arranque',
     desc:'Completa novas entradas de matriz seguindo a lógica de exemplos validados.',
-    prompt:`You are a senior consultant applying a significance matrix. Study the examples and complete the new assessment in the same format.
+    prompt:`És um consultor sénior a aplicar uma matriz de significância. Estuda os exemplos e completa a nova avaliação no mesmo formato.
 
-Significance scale: Negligible / Minor / Moderate / Major
-Receptor sensitivity: Low / Medium / High / Very High
-Effect magnitude: Negligible / Low / Medium / High
+Escala de significância: Negligenciável / Menor / Moderada / Maior
+Sensibilidade do receptor: Baixa / Média / Alta / Muito Alta
+Magnitude do efeito: Negligenciável / Baixa / Média / Alta
 
---- EXAMPLE 1 ---
-Receptor: Ancient woodland (Very High sensitivity)
-Effect: Permanent root zone compaction during construction (Medium magnitude)
-Duration: Permanent | Extent: Local | Reversibility: Irreversible
-Significance BEFORE mitigation: Major Adverse
-Mitigation: No-dig construction zone, BS 5837 tree protection fencing
-Significance AFTER mitigation: Moderate Adverse
-Justification: Mitigation reduces physical disturbance but permanent hydrological changes remain.
+--- EXEMPLO 1 ---
+Receptor: Floresta antiga (sensibilidade Muito Alta)
+Efeito: Compactação permanente da zona radicular durante a construção (magnitude Média)
+Duração: Permanente | Extensão: Local | Reversibilidade: Irreversível
+Significância ANTES de mitigação: Adversa Maior
+Mitigação: Zona de construção sem escavação, vedação de protecção de árvores BS 5837
+Significância APÓS mitigação: Adversa Moderada
+Justificação: A mitigação reduz a perturbação física, mas mantêm-se alterações hidrológicas permanentes.
 
---- EXAMPLE 2 ---
-Receptor: Residential properties — noise (Medium sensitivity)
-Effect: Construction noise, piling phase (High magnitude, temporary)
-Duration: 6 weeks | Extent: Local | Reversibility: Fully reversible
-Significance BEFORE: Moderate Adverse
-Mitigation: BS 5228 working hours, low-noise piling method, prior notification
-Significance AFTER: Minor Adverse
+--- EXEMPLO 2 ---
+Receptor: Habitações residenciais — ruído (sensibilidade Média)
+Efeito: Ruído de construção, fase de cravação de estacas (magnitude Alta, temporário)
+Duração: 6 semanas | Extensão: Local | Reversibilidade: Totalmente reversível
+Significância ANTES: Adversa Moderada
+Mitigação: Horário de trabalho BS 5228, método de cravação de baixo ruído, notificação prévia
+Significância APÓS: Adversa Menor
 
---- NEW ASSESSMENT ---
-Receptor: [RECEPTOR + SENSITIVITY]
-Effect: [EFFECT + MAGNITUDE]
-Duration: [temporary/permanent] | Extent: [local/regional] | Reversibility: [reversible/irreversible]
+--- NOVA AVALIAÇÃO ---
+Receptor: [RECEPTOR + SENSIBILIDADE]
+Efeito: [EFEITO + MAGNITUDE]
+Duração: [temporário/permanente] | Extensão: [local/regional] | Reversibilidade: [reversível/irreversível]
 
-Complete the full matrix entry including mitigation and justification.`
+Completa a entrada completa da matriz, incluindo mitigação e justificação.`
   },
   {
     id:'st-r3', cat:'relatorios', type:'cot',
     title:'Análise de conformidade regulatória',
     author:'Arranque',
     desc:'Avaliação passo-a-passo de conformidade contra múltiplas normas com gaps priorizados.',
-    prompt:`You are a senior environmental and sustainability consultant. Conduct a structured regulatory compliance review of the project below, reasoning step by step.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade. Conduz uma revisão estruturada de conformidade regulatória do projecto abaixo, raciocinando passo a passo.
 
-Project: [PROJECT DESCRIPTION]
-Activity sector: [e.g., extractive industry, energy generation, infrastructure, agro-industry, real estate, financial undertaking, manufacturing]
-Geographic scope: [PT national / regional CCDR / EU cross-border / international]
-Applicable regulatory framework: [list 3-6 key regulations — e.g., RJIA (DL 151-B/2013 as amended), Habitats Directive 92/43/EEC, Water Framework Directive 2000/60/EC, IED 2010/75/EU, ESRS E1-E5, EU Taxonomy 2020/852, SFDR 2019/2088, CSDDD, ISO 14001, sectoral BAT conclusions]
-Current project status: [phase, what has been submitted, what regulator response has been received]
+Projecto: [DESCRIÇÃO DO PROJECTO]
+Sector de actividade: [ex.: indústria extractiva, produção de energia, infra-estrutura, agro-indústria, imobiliário, entidade financeira, indústria transformadora]
+Âmbito geográfico: [PT nacional / regional CCDR / UE transfronteiriço / internacional]
+Enquadramento regulatório aplicável: [lista 3-6 regulamentos-chave — ex.: RJIA (DL 151-B/2013 com as alterações), Habitats Directive 92/43/EEC, Water Framework Directive 2000/60/EC, IED 2010/75/EU, ESRS E1-E5, EU Taxonomy 2020/852, SFDR 2019/2088, CSDDD, ISO 14001, conclusões BAT sectoriais]
+Estado actual do projecto: [fase, o que foi submetido, que resposta do regulador foi recebida]
 
-Walk through your analysis:
-1. SCOPE — for each regulation, identify the specific articles, clauses, or annexes relevant to this project — cite them precisely. Distinguish mandatory from voluntary (best practice) requirements.
-2. STATUS — for each requirement, assess current compliance: COMPLIANT / PARTIAL / NON-COMPLIANT / UNCLEAR. Note the evidence basis for each conclusion.
-3. GAP DESCRIPTION — for partial or non-compliant items, describe the gap precisely: what is missing, what would be required to close it, who needs to act.
-4. RISK RANKING — rank gaps on two axes:
-   (a) regulatory risk (permit refusal, RECAPE, infringement, disclosure non-compliance, contractual breach with financiers)
-   (b) effort to close (data collection, design change, stakeholder engagement, legal opinion)
-5. PRIORITISED ACTION PLAN — what to do first (high risk + low effort = immediate), what next (high risk + high effort = critical path), what last (low risk = monitor). Sequence by regulatory deadline where applicable.
-6. ESCALATION — flag any gap that needs legal counsel, regulator pre-engagement, or board-level decision before the consultant alone can recommend.
+Percorre a tua análise:
+1. ÂMBITO — para cada regulamento, identifica os artigos, cláusulas ou anexos específicos relevantes para este projecto — cita-os com precisão. Distingue requisitos obrigatórios de voluntários (boa prática).
+2. ESTADO — para cada requisito, avalia a conformidade actual: CONFORME / PARCIAL / NÃO CONFORME / POR ESCLARECER. Indica a base de evidência de cada conclusão.
+3. DESCRIÇÃO DO GAP — para itens parciais ou não conformes, descreve o gap com precisão: o que falta, o que seria necessário para o fechar, quem tem de actuar.
+4. RANKING DE RISCO — ordena os gaps em dois eixos:
+   (a) risco regulatório (recusa de licença, RECAPE, infracção, incumprimento de divulgação, quebra contratual com financiadores)
+   (b) esforço para fechar (recolha de dados, alteração de projecto, envolvimento de partes interessadas, parecer jurídico)
+5. PLANO DE ACÇÃO PRIORIZADO — o que fazer primeiro (risco alto + esforço baixo = imediato), o que fazer a seguir (risco alto + esforço alto = caminho crítico), o que fica para o fim (risco baixo = monitorizar). Sequencia por prazo regulatório quando aplicável.
+6. ESCALAGEM — sinaliza qualquer gap que precise de aconselhamento jurídico, pré-articulação com o regulador, ou decisão ao nível do conselho antes de o consultor poder recomendar sozinho.
 
-Show your reasoning at each step. Use [VERIFY] where current legal text needs checking against amendments (regulations change — never assume your memory of a clause is current). Use [LEGAL OPINION] where the question crosses into legal interpretation rather than environmental judgment.
+Mostra o teu raciocínio em cada passo. Usa [VERIFICAR] onde o texto legal actual precisa de ser confirmado face a alterações (a regulação muda — nunca assumas que a tua memória de uma cláusula está actual). Usa [PARECER JURÍDICO] onde a questão entra em interpretação legal e não em juízo ambiental.
 
-Length: 600-800 words.`
+Extensão: 600-800 palavras.`
   },
 
   // DADOS (3)
@@ -1661,71 +1677,71 @@ Length: 600-800 words.`
     title:'Interpretação de dados de monitorização',
     author:'Arranque',
     desc:'Cola dados em bruto; obtém comentário técnico com contexto regulatório.',
-    prompt:`You are a senior consultant interpreting monitoring data for a technical report.
+    prompt:`És um consultor sénior a interpretar dados de monitorização para um relatório técnico.
 
-Environmental medium: [e.g., groundwater, air quality, noise, soil]
-Monitoring location/receptor: [description]
-Applicable standard: [e.g., WHO AQG 2021, EA Cat 4 Screening Values, BS 8233:2014]
-Data:
-[PASTE DATA — parameter, units, measured values, dates]
+Meio ambiental: [ex.: águas subterrâneas, qualidade do ar, ruído, solo]
+Local/receptor de monitorização: [descrição]
+Norma aplicável: [ex.: WHO AQG 2021, EA Cat 4 Screening Values, BS 8233:2014]
+Dados:
+[COLAR DADOS — parâmetro, unidades, valores medidos, datas]
 
-Write a 300-450 word commentary that:
-1. States whether values comply with the applicable standard
-2. Identifies trends (improving, deteriorating, stable)
-3. Flags anomalous readings and plausible explanations
-4. Recommends follow-up actions
-5. Uses precise technical language suitable for regulatory submission
+Escreve um comentário de 300-450 palavras que:
+1. Indica se os valores cumprem a norma aplicável
+2. Identifica tendências (a melhorar, a deteriorar, estável)
+3. Sinaliza leituras anómalas e explicações plausíveis
+4. Recomenda acções de seguimento
+5. Usa linguagem técnica precisa, adequada a submissão regulatória
 
-Do NOT invent numbers. Use [CONFIRM] for any value to verify.`
+NÃO inventes números. Usa [CONFIRMAR] para qualquer valor a verificar.`
   },
   {
     id:'st-d2', cat:'dados', type:'few',
     title:'Sumário de compliance multi-parâmetro',
     author:'Arranque',
     desc:'Gera tabela de compliance consistente a partir de exemplos validados.',
-    prompt:`You are a senior consultant. Study these compliance summary examples and generate a new one in the same format.
+    prompt:`És um consultor sénior. Estuda estes exemplos de sumário de compliance e gera um novo no mesmo formato.
 
---- EXAMPLE 1: Noise ---
-Parameter: LAeq,16h (daytime)
-Measured: 52 dB(A)
-Limit: 55 dB(A) (BS 8233:2014 — good acoustic design)
-Status: COMPLIANT (3 dB margin)
-Commentary: Within good design threshold. The 3 dB margin provides adequate buffer.
+--- EXEMPLO 1: Ruído ---
+Parâmetro: LAeq,16h (período diurno)
+Medido: 52 dB(A)
+Limite: 55 dB(A) (BS 8233:2014 — boa concepção acústica)
+Estado: CONFORME (margem de 3 dB)
+Comentário: Dentro do limiar de boa concepção. A margem de 3 dB proporciona buffer adequado.
 
---- EXAMPLE 2: Groundwater ---
-Parameter: Total petroleum hydrocarbons (TPH)
-Measured: 1,240 µg/L
-Limit: 10 µg/L (EA Drinking Water Standard)
-Status: NON-COMPLIANT (exceedance factor: 124×)
-Commentary: Significant exceedance indicates residual contamination from historic industrial use. Remediation target should be <10 µg/L.
+--- EXEMPLO 2: Águas subterrâneas ---
+Parâmetro: Hidrocarbonetos totais de petróleo (TPH)
+Medido: 1.240 µg/L
+Limite: 10 µg/L (EA Drinking Water Standard)
+Estado: NÃO CONFORME (factor de excedência: 124×)
+Comentário: A excedência significativa indica contaminação residual de uso industrial histórico. O alvo de remediação deve ser <10 µg/L.
 
---- NEW ENTRY ---
-Parameter: [NAME + UNITS]
-Measured: [VALUE]
-Standard: [STANDARD + SOURCE]
+--- NOVA ENTRADA ---
+Parâmetro: [NOME + UNIDADES]
+Medido: [VALOR]
+Norma: [NORMA + FONTE]
 
-Generate the table row and commentary in the same format.`
+Gera a linha de tabela e o comentário no mesmo formato.`
   },
   {
     id:'st-d3', cat:'dados', type:'cot',
     title:'Diagnóstico de dados anómalos',
     author:'Arranque',
     desc:'Investigação passo-a-passo da origem provável de valores anómalos em datasets.',
-    prompt:`You are a senior consultant investigating anomalies in environmental data. Reason step by step.
+    prompt:`És um consultor sénior a investigar anomalias em dados ambientais. Raciocina passo a passo.
 
-Dataset description: [WHAT WAS MEASURED, WHERE, WHEN, HOW]
-Anomaly observed: [DESCRIBE THE ANOMALY — outlier, sudden change, pattern break]
-Context: [WEATHER, OPERATIONS, RECENT EVENTS THAT MIGHT MATTER]
+Descrição do dataset: [O QUE FOI MEDIDO, ONDE, QUANDO, COMO]
+Anomalia observada: [DESCREVE A ANOMALIA — outlier, mudança súbita, quebra de padrão]
+Contexto: [METEOROLOGIA, OPERAÇÕES, EVENTOS RECENTES QUE POSSAM IMPORTAR]
 
-Walk through your diagnosis:
-1. First, rule out measurement/instrument error — what would that look like in the data?
-2. Then, consider natural causes (weather events, seasonal patterns)
-3. Then, consider operational causes (site activities, nearby works)
-4. Then, consider data handling issues (unit conversion, sample contamination)
-5. Rank the remaining candidate explanations by likelihood
-6. For the top 2 explanations, describe what additional data would confirm or refute them
+Percorre o teu diagnóstico:
+1. Primeiro, exclui erro de medição/instrumento — como é que isso se manifestaria nos dados?
+2. Depois, considera causas naturais (eventos meteorológicos, padrões sazonais)
+3. Depois, considera causas operacionais (actividades no local, obras próximas)
+4. Depois, considera problemas de tratamento de dados (conversão de unidades, contaminação de amostra)
+5. Ordena as explicações candidatas restantes por probabilidade
+6. Para as 2 explicações de topo, descreve que dados adicionais as confirmariam ou refutariam
 
-Be transparent about uncertainty. Use [VERIFY] for assumptions you'd want to confirm.`
+Sê transparente quanto à incerteza. Usa [VERIFICAR] para pressupostos que quererias confirmar.`
   },
 
   // EXCEL (3)
@@ -1734,81 +1750,81 @@ Be transparent about uncertainty. Use [VERIFY] for assumptions you'd want to con
     title:'Registo de monitorização — estrutura Excel',
     author:'Arranque',
     desc:'Gera estrutura Excel completa para log de monitorização multi-parâmetro.',
-    prompt:`You are a senior consultant designing an Excel monitoring register for a project. Generate a detailed spreadsheet structure I can build immediately.
+    prompt:`És um consultor sénior a conceber um registo de monitorização em Excel para um projecto. Gera uma estrutura detalhada de folha de cálculo que eu possa construir de imediato.
 
-Project type: [e.g., construction, industrial facility, ongoing operations]
-Parameters to monitor: [e.g., noise, dust, water quality, emissions]
-Frequency: [e.g., weekly, monthly]
-Monitoring points: [X locations]
-Trigger levels: [list key thresholds per parameter]
+Tipo de projecto: [ex.: construção, instalação industrial, operações em curso]
+Parâmetros a monitorizar: [ex.: ruído, poeiras, qualidade da água, emissões]
+Frequência: [ex.: semanal, mensal]
+Pontos de monitorização: [X locais]
+Níveis de gatilho: [lista os principais limiares por parâmetro]
 
-For each worksheet provide:
-1. Tab name and purpose
-2. Column list: Column letter | Header | Data type | Format | Validation | Notes
-3. Conditional formatting rules (e.g., red if exceeds trigger)
-4. Excel formulas for summaries (rolling average, exceedance count)
-5. Dashboard tab with KPI cells
+Para cada folha indica:
+1. Nome da tab e finalidade
+2. Lista de colunas: Letra da coluna | Cabeçalho | Tipo de dados | Formato | Validação | Notas
+3. Regras de formatação condicional (ex.: vermelho se exceder gatilho)
+4. Fórmulas Excel para sumários (média móvel, contagem de excedências)
+5. Tab de dashboard com células de KPI
 
-Output as structured table. Use exact Excel formula syntax. Note any function that requires Excel 365 vs older versions.`
+Apresenta como tabela estruturada. Usa a sintaxe exacta de fórmulas Excel. Assinala qualquer função que exija Excel 365 vs. versões anteriores.`
   },
   {
     id:'st-e2', cat:'excel', type:'few',
     title:'Folha BNG — Few-Shot DEFRA Metric',
     author:'Arranque',
     desc:'Estrutura Excel para cálculo BNG seguindo a lógica DEFRA 3.1.',
-    prompt:`You are a senior consultant. Study the BNG calculation examples below and generate a complete Excel sheet structure for a new site.
+    prompt:`És um consultor sénior. Estuda os exemplos de cálculo de BNG abaixo e gera uma estrutura completa de folha Excel para um novo local.
 
---- EXAMPLE HABITAT ROW ---
-Habitat type: Marshy grassland (lowland)
-Area (ha): 1.2 | Distinctiveness: High (6) | Condition: Moderate (5) | Strategic significance: Low (1.0)
-Baseline units = 1.2 × 6 × 5 × 1.0 = 36.0
-Formula: =D4*E4*F4*G4
+--- EXEMPLO DE LINHA DE HABITAT ---
+Tipo de habitat: Marshy grassland (lowland)
+Área (ha): 1,2 | Distinctiveness: High (6) | Condition: Moderate (5) | Strategic significance: Low (1.0)
+Baseline units = 1,2 × 6 × 5 × 1,0 = 36,0
+Fórmula: =D4*E4*F4*G4
 
---- SUMMARY FORMULAS ---
+--- FÓRMULAS DE SUMÁRIO ---
 Total baseline: =SUM(H4:H50)
 Total post-development: =SUM(H54:H100)
 Net gain %: =(H102-H51)/H51*100
 Pass/fail: =IF(H103>=10,"PASS – "&TEXT(H103,"0.0")&"%","FAIL – "&TEXT(H103,"0.0")&"%")
 
---- NEW SITE ---
-Site name: [NAME]
-Baseline habitats: [list types with areas]
-Post-development habitats: [list creation/enhancement habitats]
+--- NOVO LOCAL ---
+Nome do local: [NOME]
+Habitats de base: [lista tipos com áreas]
+Habitats pós-desenvolvimento: [lista habitats de criação/melhoria]
 
-Generate:
-1. Full column structure for baseline and post-development tabs
-2. All formulas using DEFRA 3.1 multiplier logic
-3. Dashboard summary formulas
-4. Conditional formatting for pass/fail
-Flag any multiplier as [VERIFY DEFRA] for confirmation against current tool.`
+Gera:
+1. Estrutura completa de colunas para as tabs de baseline e pós-desenvolvimento
+2. Todas as fórmulas usando a lógica de multiplicadores DEFRA 3.1
+3. Fórmulas de sumário do dashboard
+4. Formatação condicional para pass/fail
+Assinala qualquer multiplicador como [VERIFICAR DEFRA] para confirmação face à ferramenta actual.`
   },
   {
     id:'st-e3', cat:'excel', type:'one',
     title:'Tracker de fees e recursos',
     author:'Arranque',
     desc:'Excel completo de gestão de projecto: budget vs actual, alocação, margem.',
-    prompt:`You are a senior environmental and sustainability consultant. Design an Excel project fee tracker for internal management of a consulting engagement.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade. Concebe um tracker de honorários de projecto em Excel para gestão interna de um trabalho de consultoria.
 
-Project: [NAME]
-Project type: [e.g., EIA, ESG due diligence, GHG inventory, biodiversity assessment, sustainability strategy, monitoring campaign]
-Total contracted fee: [AMOUNT]
-Stages: [e.g., Phase A Scoping / Phase B Baseline / Phase C Assessment / Phase D Reporting / Phase E Public Consultation Support]
-Team roles: [e.g., Director, Senior Specialist, Consultant, Junior Consultant, GIS Technician, sub-consultant — name discipline]
-Hourly rates per role: [list]
-Estimated hours per role per stage: [or use placeholders]
-Expenses budget: [amount + categories — travel, lab analysis, GIS data, stakeholder workshop, regulator fee]
-Sub-consultant fees: [if applicable, by discipline]
+Projecto: [NOME]
+Tipo de projecto: [ex.: EIA, due diligence ESG, inventário GHG, avaliação de biodiversidade, estratégia de sustentabilidade, campanha de monitorização]
+Honorário total contratado: [VALOR]
+Fases: [ex.: Fase A Scoping / Fase B Baseline / Fase C Avaliação / Fase D Relatório / Fase E Apoio a Consulta Pública]
+Papéis da equipa: [ex.: Director, Especialista Sénior, Consultor, Consultor Júnior, Técnico SIG, subconsultor — indica a disciplina]
+Tarifas horárias por papel: [lista]
+Horas estimadas por papel por fase: [ou usa placeholders]
+Orçamento de despesas: [valor + categorias — deslocações, análise laboratorial, dados SIG, workshop de partes interessadas, taxa de regulador]
+Honorários de subconsultores: [se aplicável, por disciplina]
 
-Generate:
-1. Tab "Budget" — planned hours × rates per stage, fee allocation, expenses, sub-consultant fees, contingency line
-2. Tab "Actuals" — weekly time entries by role and stage, cumulative burn, variance vs budget, expenses incurred
-3. Tab "Variations" — log of approved variations / change orders with fee impact (important for projects where scope shifts during baseline season)
-4. Tab "Dashboard" — % fee spent, % complete (manual input by stage), projected outturn, RAG status, recovery rate per role
-5. All Excel formulas written explicitly, using exact syntax
-6. Conditional formatting: green <80%, amber 80-95%, red >95%
-7. Data validation on input cells (date format, role dropdown, stage dropdown)
+Gera:
+1. Tab "Budget" — horas planeadas × tarifas por fase, alocação de honorário, despesas, honorários de subconsultor, linha de contingência
+2. Tab "Actuals" — registos de tempo semanais por papel e fase, burn acumulado, variância vs. budget, despesas incorridas
+3. Tab "Variations" — registo de variações / change orders aprovados com impacto no honorário (importante para projectos onde o âmbito muda durante a época de baseline)
+4. Tab "Dashboard" — % de honorário gasto, % concluído (input manual por fase), outturn projectado, estado RAG, taxa de recuperação por papel
+5. Todas as fórmulas Excel escritas explicitamente, usando a sintaxe exacta
+6. Formatação condicional: verde <80%, âmbar 80-95%, vermelho >95%
+7. Validação de dados nas células de input (formato de data, dropdown de papel, dropdown de fase)
 
-Note any formula requiring Excel 365 (LET, LAMBDA, XLOOKUP) vs Excel 2016+ compatibility. Flag any sub-consultant invoice tracking that requires multi-currency handling.`
+Assinala qualquer fórmula que exija Excel 365 (LET, LAMBDA, XLOOKUP) vs. compatibilidade com Excel 2016+. Sinaliza qualquer seguimento de facturas de subconsultor que exija tratamento multi-moeda.`
   },
 
   // COMUNICAÇÃO (3)
@@ -1817,70 +1833,70 @@ Note any formula requiring Excel 365 (LET, LAMBDA, XLOOKUP) vs Excel 2016+ compa
     title:'Email de seguimento profissional',
     author:'Arranque',
     desc:'Email de follow-up que mantém o cliente envolvido sem soar insistente.',
-    prompt:`You are a senior environmental and sustainability consultant writing a professional follow-up email to a client. Bilingual context (Portuguese client base, EN technical correspondence common).
+    prompt:`És um consultor sénior de ambiente e sustentabilidade a escrever um email de seguimento profissional a um cliente. Contexto bilingue (base de clientes portuguesa, correspondência técnica em EN é comum).
 
-Context: [WHAT WAS DISCUSSED IN LAST CONTACT — e.g., proposal sent, draft delivered, decision point pending, public consultation outcome]
-Time since last contact: [e.g., 2 weeks]
-Your goal with this email: [e.g., re-engage cold trail, request technical decision, share regulatory development, escalate timing concern]
-Client relationship: [e.g., new and exploratory, established and warm, contractually delicate, post-deliverable]
-Client seniority: [e.g., technical counterpart, project manager, C-level sustainability officer, legal/compliance counsel]
-Output language: [PT or EN]
+Contexto: [O QUE FOI DISCUTIDO NO ÚLTIMO CONTACTO — ex.: proposta enviada, versão preliminar entregue, ponto de decisão pendente, resultado de consulta pública]
+Tempo desde o último contacto: [ex.: 2 semanas]
+O teu objectivo com este email: [ex.: reactivar um contacto frio, pedir uma decisão técnica, partilhar um desenvolvimento regulatório, escalar uma preocupação de prazo]
+Relação com o cliente: [ex.: nova e exploratória, estabelecida e calorosa, contratualmente delicada, pós-entregável]
+Senioridade do cliente: [ex.: interlocutor técnico, gestor de projecto, director de sustentabilidade de topo, jurídico/compliance]
+Idioma do output: [PT ou EN]
 
-Requirements:
-- Subject line that gets opened (not generic) — reference the project name, not just "follow-up"
-- Opening that doesn't apologise for the delay; if delay was ours, name it briefly and move on
-- Body: state purpose clearly, provide value — a regulatory development relevant to their project (CSRD timing, EU Taxonomy update, RJIA amendment), a useful publication, an insight from another anonymised engagement
-- Close: specific call-to-action with proposed next step (a 30-min call, a written decision by date, a document review)
-- Length: 120-180 words
-- Tone: warm but professional, respects client's time, signals you've kept thinking about their project`
+Requisitos:
+- Linha de assunto que faça abrir (não genérica) — refere o nome do projecto, não apenas "seguimento"
+- Abertura que não pede desculpa pelo atraso; se o atraso foi nosso, nomeia-o brevemente e segue em frente
+- Corpo: indica o propósito com clareza, dá valor — um desenvolvimento regulatório relevante para o projecto deles (timing CSRD, actualização EU Taxonomy, alteração ao RJIA), uma publicação útil, um insight de outro trabalho anonimizado
+- Fecho: call-to-action específico com próximo passo proposto (uma chamada de 30 min, uma decisão escrita até uma data, a revisão de um documento)
+- Extensão: 120-180 palavras
+- Tom: caloroso mas profissional, respeita o tempo do cliente, sinaliza que continuaste a pensar no projecto dele`
   },
   {
     id:'st-c2', cat:'comunicacao', type:'one',
     title:'Resposta a comentários adversos do cliente',
     author:'Arranque',
     desc:'Resposta diplomática que mantém posição técnica sem confrontar o cliente.',
-    prompt:`You are a senior environmental and sustainability consultant. The client has pushed back on our technical recommendation. Write a diplomatic response that maintains our position without escalating tension.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade. O cliente contestou a nossa recomendação técnica. Escreve uma resposta diplomática que mantenha a nossa posição sem aumentar a tensão.
 
-Our original recommendation: [BRIEF DESCRIPTION]
-Technical basis for the recommendation: [REGULATORY OR METHODOLOGICAL ANCHOR — e.g., Habitats Directive Article 6(3), ESRS E4 disclosure requirement, GHG Protocol Scope 3 boundary, BAT conclusion, RJIA Annex III screening criteria]
-Client's objection: [WHAT THEY SAID — distinguish cost objection, schedule objection, technical disagreement, optics concern]
-Underlying client concern: [WHAT THEY ACTUALLY FEAR — often differs from what they said]
-Risk if client overrides our recommendation: [QUANTIFY: permit refusal, disclosure non-compliance, reputational risk, financial exposure, project delay]
-Our liability exposure if we accept their override: [PROFESSIONAL LIABILITY, contractual carve-out needed?]
-Output language: [PT or EN]
+A nossa recomendação original: [DESCRIÇÃO BREVE]
+Base técnica da recomendação: [ÂNCORA REGULATÓRIA OU METODOLÓGICA — ex.: Habitats Directive Article 6(3), requisito de divulgação ESRS E4, fronteira de Scope 3 do GHG Protocol, conclusão BAT, critérios de triagem do Anexo III do RJIA]
+Objecção do cliente: [O QUE DISSERAM — distingue objecção de custo, de calendário, desacordo técnico, preocupação de imagem]
+Preocupação subjacente do cliente: [O QUE REALMENTE RECEIAM — muitas vezes difere do que disseram]
+Risco se o cliente ignorar a nossa recomendação: [QUANTIFICA: recusa de licença, incumprimento de divulgação, risco reputacional, exposição financeira, atraso do projecto]
+A nossa exposição de responsabilidade se aceitarmos o override deles: [RESPONSABILIDADE PROFISSIONAL, é preciso uma cláusula de salvaguarda contratual?]
+Idioma do output: [PT ou EN]
 
-Requirements:
-- Acknowledge the client's concern genuinely — paraphrase what they actually fear, not what they said
-- Restate our recommendation with the regulatory or methodological anchor (Article X of Directive Y, paragraph N of standard Z) — let the standard do the heavy lifting, not your personal opinion
-- Make the risk concrete: name the regulator (APA, ICNF, CCDR), name the disclosure framework, name the financier covenant — be specific about which third party will notice if the recommendation is ignored
-- Offer a middle-ground option if appropriate — phased approach, conditional decision, additional data collection to de-risk
-- End with respect for the client's final decision authority, but be explicit about what changes in the deliverable if they override (e.g., "if you proceed without [X], we will reflect the residual risk in the conclusion of the report")
-- Length: 200-280 words
-- Tone: confident, respectful, NOT confrontational, NOT capitulating`
+Requisitos:
+- Reconhece a preocupação do cliente de forma genuína — parafraseia o que realmente receiam, não o que disseram
+- Reafirma a nossa recomendação com a âncora regulatória ou metodológica (Artigo X da Directiva Y, parágrafo N da norma Z) — deixa a norma fazer o trabalho pesado, não a tua opinião pessoal
+- Torna o risco concreto: nomeia o regulador (APA, ICNF, CCDR), nomeia o quadro de divulgação, nomeia o covenant do financiador — sê específico sobre que terceiro irá reparar se a recomendação for ignorada
+- Oferece uma opção de meio-termo se apropriado — abordagem faseada, decisão condicional, recolha de dados adicional para reduzir o risco
+- Termina com respeito pela autoridade de decisão final do cliente, mas sê explícito sobre o que muda no entregável se eles fizerem override (ex.: "se avançarem sem [X], reflectiremos o risco residual na conclusão do relatório")
+- Extensão: 200-280 palavras
+- Tom: confiante, respeitoso, NÃO confrontacional, NÃO capitulante`
   },
   {
     id:'st-c3', cat:'comunicacao', type:'cot',
     title:'Preparação para reunião difícil',
     author:'Arranque',
     desc:'Plano passo-a-passo para reuniões com stakeholders céticos ou hostis.',
-    prompt:`You are a senior environmental and sustainability consultant preparing for a difficult stakeholder meeting. Think through the preparation step by step.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade a preparar uma reunião difícil com partes interessadas. Pensa na preparação passo a passo.
 
-Meeting context: [WHO CALLED IT, WHERE, WHEN, ON WHOSE TERMS]
-Meeting purpose: [WHAT NEEDS TO BE ACHIEVED — e.g., land permit refusal pre-empted, RJIA public consultation outcome, regulator clarification, community concern response, client decision on costly mitigation]
-Stakeholders attending: [WHO + THEIR LIKELY POSITION — distinguish: regulator (APA, ICNF, CCDR, ERSAR), promoter, opposition NGO, affected community representative, municipal officer, press]
-The hard message you need to deliver: [WHAT WILL BE UNCOMFORTABLE — distinguish bad data, regulatory non-compliance, methodological limitation, recommendation against client preference]
-Outcome you need: [SPECIFIC DECISION OR COMMITMENT — not "good meeting" but "X signs off on Y by Z"]
+Contexto da reunião: [QUEM A CONVOCOU, ONDE, QUANDO, EM QUE TERMOS]
+Objectivo da reunião: [O QUE PRECISA DE SER ALCANÇADO — ex.: antecipar recusa de licença, resultado de consulta pública RJIA, clarificação do regulador, resposta a preocupação da comunidade, decisão do cliente sobre mitigação cara]
+Partes interessadas presentes: [QUEM + POSIÇÃO PROVÁVEL — distingue: regulador (APA, ICNF, CCDR, ERSAR), promotor, ONG de oposição, representante de comunidade afectada, técnico municipal, imprensa]
+A mensagem difícil que precisas de transmitir: [O QUE SERÁ INCÓMODO — distingue dados maus, incumprimento regulatório, limitação metodológica, recomendação contra a preferência do cliente]
+Resultado de que precisas: [DECISÃO OU COMPROMISSO ESPECÍFICO — não "boa reunião" mas "X aprova Y até Z"]
 
-Walk through your preparation step by step:
-1. UNDERLYING CONCERN — what is each stakeholder's biggest underlying concern? Not what they will say (their public position) but what they actually fear (loss of credibility, political pressure, financial exposure, community anger). Name it explicitly.
-2. STEEL-MAN — write out the strongest version of each stakeholder's counter-argument. If you cannot make their case persuasively, you are not ready to answer it.
-3. EVIDENCE FOR MOVEMENT — what 2-3 facts could shift their position if delivered well? These must be specific (a measured value, a regulatory precedent, a quantified risk) — not opinions.
-4. CONCESSION DESIGN — what concession could you offer that costs us little but signals respect? (Additional monitoring, phased delivery, joint site visit, written follow-up)
-5. RED LINE — what is the position you cannot move from without compromising professional integrity or regulatory defensibility? Name it before the meeting, not during.
-6. BAD-MEETING FALLBACK — if the meeting goes off the rails, what is your pre-agreed fallback to keep progress alive? (Written follow-up by date, escalation to a different forum, pause and re-engage with a different stakeholder)
-7. OPENING 60 SECONDS — draft the exact words you will say first. The opening sets the temperature for the whole meeting. State the purpose, acknowledge the difficulty, commit to listening, and signal the outcome you hope for.
+Percorre a tua preparação passo a passo:
+1. PREOCUPAÇÃO SUBJACENTE — qual é a maior preocupação subjacente de cada parte interessada? Não o que vão dizer (a sua posição pública) mas o que realmente receiam (perda de credibilidade, pressão política, exposição financeira, raiva da comunidade). Nomeia-a explicitamente.
+2. STEEL-MAN — escreve a versão mais forte do contra-argumento de cada parte interessada. Se não consegues defender a posição deles de forma persuasiva, não estás pronto para a responder.
+3. EVIDÊNCIA PARA MOVIMENTO — que 2-3 factos poderiam mudar a posição deles se bem entregues? Têm de ser específicos (um valor medido, um precedente regulatório, um risco quantificado) — não opiniões.
+4. DESENHO DA CONCESSÃO — que concessão poderias oferecer que nos custe pouco mas sinalize respeito? (Monitorização adicional, entrega faseada, visita conjunta ao local, seguimento por escrito)
+5. LINHA VERMELHA — qual é a posição da qual não podes recuar sem comprometer a integridade profissional ou a defensabilidade regulatória? Nomeia-a antes da reunião, não durante.
+6. PLANO B DE MÁ REUNIÃO — se a reunião descarrilar, qual é o teu plano B pré-acordado para manter o progresso vivo? (Seguimento por escrito até uma data, escalagem para outro fórum, pausa e re-engajamento com outra parte interessada)
+7. PRIMEIROS 60 SEGUNDOS — redige as palavras exactas que dirás primeiro. A abertura define a temperatura de toda a reunião. Indica o propósito, reconhece a dificuldade, compromete-te a ouvir, e sinaliza o resultado que esperas.
 
-Be specific. Use [STAKEHOLDER NAME] or [STAKEHOLDER ROLE] consistently. Show your reasoning. Length: 500-700 words.`
+Sê específico. Usa [NOME DO STAKEHOLDER] ou [PAPEL DO STAKEHOLDER] de forma consistente. Mostra o teu raciocínio. Extensão: 500-700 palavras.`
   },
 
   // SUSTENTABILIDADE — ESG / CSRD / GHG / EU TAXONOMY (integrados nas categorias existentes)
@@ -1889,76 +1905,421 @@ Be specific. Use [STAKEHOLDER NAME] or [STAKEHOLDER ROLE] consistently. Show you
     title:'CSRD — Avaliação de dupla materialidade',
     author:'Arranque',
     desc:'Avaliação ESRS 1 dupla materialidade (impact + financial) passo-a-passo, com mapeamento aos topical standards.',
-    prompt:`You are a senior environmental and sustainability consultant guiding a client through a CSRD double materiality assessment under ESRS 1. Walk through the assessment step by step.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade a orientar um cliente numa avaliação de dupla materialidade CSRD ao abrigo da ESRS 1. Percorre a avaliação passo a passo.
 
-Client sector: [SECTOR — e.g., agro-industry, energy generation, real estate, financial services]
-Client size: [REVENUE / EMPLOYEES / GEOGRAPHIC SCOPE]
-Reporting year: [YEAR]
-Identified sustainability matters to assess: [LIST 5-10 from sector ESRS guidance or value chain mapping]
-Stakeholder groups consulted: [LIST — investors, employees, communities, regulators, suppliers, customers]
+Sector do cliente: [SECTOR — ex.: agro-indústria, produção de energia, imobiliário, serviços financeiros]
+Dimensão do cliente: [RECEITA / COLABORADORES / ÂMBITO GEOGRÁFICO]
+Ano de reporte: [ANO]
+Temas de sustentabilidade identificados para avaliar: [LISTA 5-10 da orientação ESRS do sector ou do mapeamento da cadeia de valor]
+Grupos de partes interessadas consultados: [LISTA — investidores, colaboradores, comunidades, reguladores, fornecedores, clientes]
 
-For each sustainability matter, walk through:
-1. IMPACT MATERIALITY — what positive or negative impact does the client's activity have on people or environment? Consider severity, scope, irremediability and likelihood (per ESRS 1 §43).
-2. FINANCIAL MATERIALITY — what financial risks or opportunities does this matter create for the client? Consider magnitude and likelihood over short / medium / long term horizons.
-3. CONCLUSION — material from impact perspective? Material from financial perspective? (Yes / No / Borderline). Be explicit about the threshold applied.
-4. ESRS MAPPING — which ESRS topical standard(s) does this matter map to? (E1 Climate change, E2 Pollution, E3 Water and marine resources, E4 Biodiversity and ecosystems, E5 Resource use and circular economy, S1 Own workforce, S2 Workers in the value chain, S3 Affected communities, S4 Consumers and end-users, G1 Business conduct)
+Para cada tema de sustentabilidade, percorre:
+1. IMPACT MATERIALITY — que impacto positivo ou negativo tem a actividade do cliente sobre pessoas ou ambiente? Considera severidade, âmbito, irremediabilidade e probabilidade (per ESRS 1 §43).
+2. FINANCIAL MATERIALITY — que riscos ou oportunidades financeiras este tema cria para o cliente? Considera magnitude e probabilidade em horizontes de curto / médio / longo prazo.
+3. CONCLUSÃO — material na perspectiva de impacto? Material na perspectiva financeira? (Sim / Não / Limítrofe). Sê explícito quanto ao limiar aplicado.
+4. MAPEAMENTO ESRS — a que ESRS topical standard(s) este tema mapeia? (E1 Climate change, E2 Pollution, E3 Water and marine resources, E4 Biodiversity and ecosystems, E5 Resource use and circular economy, S1 Own workforce, S2 Workers in the value chain, S3 Affected communities, S4 Consumers and end-users, G1 Business conduct)
 
 Output:
-- Consolidated list of material matters with the ESRS standards triggered
-- Items flagged [VERIFY] where assumptions about thresholds, value chain reach, or stakeholder input need client confirmation
-- Suggested next steps for disclosure preparation, including which datapoints will need to be collected by reporting deadline
+- Lista consolidada de temas materiais com os ESRS standards accionados
+- Itens sinalizados [VERIFICAR] onde pressupostos sobre limiares, alcance da cadeia de valor ou input de partes interessadas precisam de confirmação do cliente
+- Próximos passos sugeridos para a preparação da divulgação, incluindo que datapoints terão de ser recolhidos até ao prazo de reporte
 
-Tone: rigorous, methodological — the voice of someone who has defended materiality conclusions under audit. Show your reasoning. Length: 800-1200 words.`
+Tom: rigoroso, metodológico — a voz de quem já defendeu conclusões de materialidade sob auditoria. Mostra o teu raciocínio. Extensão: 800-1200 palavras.`
   },
   {
     id:'st-d4', cat:'dados', type:'one',
     title:'GHG Protocol — Categorização Scope 1/2/3',
     author:'Arranque',
     desc:'Classifica uma actividade no Scope e categoria correctos do GHG Protocol, com fontes de factores de emissão.',
-    prompt:`You are a senior environmental and sustainability consultant supporting a client with GHG Protocol inventory categorization. Classify the activity below into the correct Scope and category.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade a apoiar um cliente na categorização de inventário GHG Protocol. Classifica a actividade abaixo no Scope e categoria correctos.
 
-Activity description: [DESCRIBE THE EMISSION-GENERATING ACTIVITY]
-Reporting entity: [COMPANY NAME OR DESCRIPTION]
-Operational boundary chosen: [equity share / financial control / operational control — per GHG Protocol Corporate Standard Chapter 3]
-Reporting year: [YEAR]
-Geographic scope: [PT / Iberian / EU / global]
+Descrição da actividade: [DESCREVE A ACTIVIDADE GERADORA DE EMISSÕES]
+Entidade que reporta: [NOME OU DESCRIÇÃO DA EMPRESA]
+Fronteira operacional escolhida: [quota de capital (equity share) / controlo financeiro / controlo operacional — per GHG Protocol Corporate Standard Chapter 3]
+Ano de reporte: [ANO]
+Âmbito geográfico: [PT / Ibérico / UE / global]
 
-Provide:
-1. SCOPE — 1 (direct emissions from owned/controlled sources), 2 (indirect from purchased energy), or 3 (other indirect — value chain).
-2. CATEGORY — for Scope 3, identify the relevant category 1-15 per the Corporate Value Chain (Scope 3) Standard. For Scope 2, distinguish location-based vs market-based reporting.
-3. RATIONALE — explain why this Scope and category apply, citing the GHG Protocol guidance (Corporate Standard chapter, or relevant FAQ).
-4. DATA NEEDED — list the activity data (kWh, litres of fuel, tonne-km, spend, employee count) and emission factors required.
-5. RECOMMENDED EMISSION FACTOR SOURCE — point to a recognised database (DEFRA UK Government GHG Conversion Factors, EPA, IEA, ecoinvent, ADEME Base Empreinte, EXIOBASE for spend-based) — note the latest available year.
-6. COMMON PITFALLS — flag boundary errors, double-counting risks, or conversion mistakes specific to this activity.
-7. [VERIFY] — any classification that depends on contractual or operational details to confirm with the client (e.g., who holds the lease, who operates the asset, supplier-specific factors vs averages).
+Indica:
+1. SCOPE — 1 (emissões directas de fontes próprias/controladas), 2 (indirectas de energia adquirida), ou 3 (outras indirectas — cadeia de valor).
+2. CATEGORIA — para Scope 3, identifica a categoria 1-15 relevante per o Corporate Value Chain (Scope 3) Standard. Para Scope 2, distingue reporte location-based (baseado na localização) vs market-based (baseado no mercado).
+3. FUNDAMENTAÇÃO — explica porque se aplicam este Scope e categoria, citando a orientação GHG Protocol (capítulo do Corporate Standard, ou FAQ relevante).
+4. DADOS NECESSÁRIOS — lista os dados de actividade (kWh, litros de combustível, tonelada-km, despesa, número de colaboradores) e os factores de emissão necessários.
+5. FONTE RECOMENDADA DE FACTOR DE EMISSÃO — aponta para uma base de dados reconhecida (DEFRA UK Government GHG Conversion Factors, EPA, IEA, ecoinvent, ADEME Base Empreinte, EXIOBASE para spend-based) — indica o ano mais recente disponível.
+6. ARMADILHAS COMUNS — sinaliza erros de fronteira, riscos de dupla contagem, ou erros de conversão específicos desta actividade.
+7. [VERIFICAR] — qualquer classificação que dependa de detalhes contratuais ou operacionais a confirmar com o cliente (ex.: quem detém o arrendamento, quem opera o activo, factores específicos do fornecedor vs. médias).
 
-Do NOT invent emission factors. Where a factor must be cited, point to the recognised source and the year. If the client's accounting framework requires ISO 14064-1 alignment in addition to GHG Protocol, note where the two diverge.
+NÃO inventes factores de emissão. Onde um factor tiver de ser citado, aponta para a fonte reconhecida e o ano. Se o quadro contabilístico do cliente exigir alinhamento com ISO 14064-1 para além do GHG Protocol, indica onde os dois divergem.
 
-Length: 250-400 words.`
+Extensão: 250-400 palavras.`
   },
   {
     id:'st-r5', cat:'relatorios', type:'cot',
     title:'Taxonomia EU — Triagem de alinhamento',
     author:'Arranque',
     desc:'Assessment EU Taxonomy passo-a-passo: eligibility, substantial contribution, DNSH, minimum safeguards.',
-    prompt:`You are a senior environmental and sustainability consultant assessing whether an economic activity is EU Taxonomy aligned under Regulation (EU) 2020/852 and applicable Delegated Acts. Reason step by step.
+    prompt:`És um consultor sénior de ambiente e sustentabilidade a avaliar se uma actividade económica está alinhada com a EU Taxonomy ao abrigo da Regulation (EU) 2020/852 e dos Delegated Acts aplicáveis. Raciocina passo a passo.
 
-Activity description: [DESCRIBE THE ECONOMIC ACTIVITY]
-NACE code or estimate: [IF KNOWN]
-Reporting entity type: [non-financial undertaking under CSRD / financial undertaking under SFDR / Article 8 disclosure / Article 9 product]
-Reporting year: [YEAR]
-Applicable Delegated Acts: [Climate Delegated Act (EU) 2021/2139 / Environmental Delegated Act (EU) 2023/2486 / both — note the most recent amendments]
+Descrição da actividade: [DESCREVE A ACTIVIDADE ECONÓMICA]
+Código NACE ou estimativa: [SE CONHECIDO]
+Tipo de entidade que reporta: [non-financial undertaking ao abrigo da CSRD / financial undertaking ao abrigo da SFDR / divulgação Article 8 / produto Article 9]
+Ano de reporte: [ANO]
+Delegated Acts aplicáveis: [Climate Delegated Act (EU) 2021/2139 / Environmental Delegated Act (EU) 2023/2486 / ambos — indica as alterações mais recentes]
 
-Walk through the assessment:
-1. ELIGIBILITY — is the activity included in the Taxonomy (i.e., listed in one of the Annexes of the Climate or Environmental Delegated Acts)? Cite the specific Annex section and activity number.
-2. SUBSTANTIAL CONTRIBUTION — does the activity meet the Technical Screening Criteria for at least one of the six environmental objectives (climate change mitigation, climate change adaptation, sustainable use of water and marine resources, transition to circular economy, pollution prevention and control, protection and restoration of biodiversity and ecosystems)? Identify which objective and which specific criteria apply.
-3. DO NO SIGNIFICANT HARM (DNSH) — for each of the five remaining objectives, does the activity avoid significant harm? Use the Annexes' generic DNSH criteria + any activity-specific DNSH criteria.
-4. MINIMUM SAFEGUARDS — does the entity comply with OECD MNE Guidelines, UN Guiding Principles on Business and Human Rights, ILO core conventions, and the International Bill of Human Rights? This is binary at entity level, not activity level.
-5. CONCLUSION — Eligible? Aligned? Partially aligned (specify which criteria are met and which are not)?
+Percorre a avaliação:
+1. ELEGIBILIDADE — a actividade está incluída na Taxonomy (i.e., listada num dos Annexes dos Climate ou Environmental Delegated Acts)? Cita a secção específica do Annex e o número da actividade.
+2. CONTRIBUTO SUBSTANCIAL — a actividade cumpre os Technical Screening Criteria para pelo menos um dos seis objectivos ambientais (climate change mitigation, climate change adaptation, sustainable use of water and marine resources, transition to circular economy, pollution prevention and control, protection and restoration of biodiversity and ecosystems)? Identifica qual objectivo e quais critérios específicos se aplicam.
+3. NÃO PREJUDICAR SIGNIFICATIVAMENTE (DNSH) — para cada um dos cinco objectivos remanescentes, a actividade evita dano significativo? Usa os critérios genéricos de DNSH dos Annexes + quaisquer critérios DNSH específicos da actividade.
+4. GARANTIAS MÍNIMAS — a entidade cumpre as OECD MNE Guidelines, os UN Guiding Principles on Business and Human Rights, as convenções fundamentais da ILO, e a International Bill of Human Rights? Isto é binário ao nível da entidade, não da actividade.
+5. CONCLUSÃO — Elegível? Alinhada? Parcialmente alinhada (especifica que critérios são cumpridos e quais não)?
 
-Use [VERIFY] for any criterion where you need additional client data or where the regulatory text may have been amended since your last reading. Do NOT invent thresholds — cite from the relevant Delegated Act Annex and flag [VERIFY] if uncertain about current revisions.
+Usa [VERIFICAR] para qualquer critério onde precises de dados adicionais do cliente ou onde o texto regulatório possa ter sido alterado desde a tua última leitura. NÃO inventes limiares — cita do Annex do Delegated Act relevante e sinaliza [VERIFICAR] se incerto quanto às revisões actuais.
 
-Length: 600-900 words. Tone: rigorous and conservative — the voice of someone who knows that aligned claims are subject to audit. End with a list of data the client must provide to finalise the assessment.`
+Extensão: 600-900 palavras. Tom: rigoroso e conservador — a voz de quem sabe que as alegações de alinhamento estão sujeitas a auditoria. Termina com uma lista dos dados que o cliente tem de fornecer para finalizar a avaliação.`
+  },
+  // EQUIPAS — FINANCEIRO / MARKETING / COMERCIAL / RH
+  {
+    id:'st-fin1', cat:'financeiro', type:'one',
+    title:'Comentário de análise de desvios',
+    author:'Arranque',
+    desc:'Comentário de gestão para análise orçamentado vs. realizado, orientado a decisão.',
+    prompt:`És um analista financeiro sénior numa consultora de ambiente e sustentabilidade. Escreve o comentário de gestão para uma análise de desvios (orçamentado vs. realizado) de um centro de custo / projecto de consultoria.
+
+Período: [MÊS/TRIMESTRE/ANO]
+Centro de custo / projecto: [ex.: campanha de monitorização ambiental, projecto EIA, due diligence ESG, inventário de carbono]
+Principais linhas com desvio: [LISTA: rubrica, valor orçamentado, valor realizado, desvio absoluto e %]
+Contexto conhecido: [ex.: trabalho de campo multi-época, sub-consultores especialistas, análises laboratoriais, derrapagem em consulta pública, prazos de regulador]
+
+Requisitos:
+- Explica os 3-4 desvios mais materiais (não listes tudo)
+- Para cada um: causa provável (ex.: esforço de campo acima do previsto, custo de sub-consultor especialista, análises laboratoriais extra, prolongamento de consulta pública), se é pontual ou estrutural, e implicação para o resto do ano
+- Distingue claramente desvios favoráveis de desfavoráveis
+- Termina com 2-3 acções de mitigação ou áreas a monitorizar
+- Tom: factual, orientado a decisão, sem jargão desnecessário
+- Extensão: 250-350 palavras, em prosa corrida (sem bullets)
+- NÃO inventes números — usa [CONFIRMAR] para qualquer valor por validar`
+  },
+  {
+    id:'st-fin2', cat:'financeiro', type:'few',
+    title:'Comentário de fecho mensal',
+    author:'Arranque',
+    desc:'Replica o estilo de comentário de fecho mensal a partir de 2 exemplos.',
+    prompt:`És um controller financeiro numa consultora de ambiente e sustentabilidade. Estuda os dois exemplos de comentário de fecho mensal e escreve um novo no mesmo estilo, estrutura e nível de detalhe.
+
+--- EXEMPLO 1 ---
+Rubrica: Margem por projecto (média da carteira)
+Realizado: 22,4% | Orçamentado: 28,0% | Desvio: -5,6 p.p.
+Comentário: A margem ficou abaixo do orçamento por sobre-esforço de trabalho de campo no projecto EIA [X], com época de amostragem prolongada não repercutida em honorários. Efeito estrutural — recomenda-se rever a estimativa de esforço de campo em propostas semelhantes.
+
+--- EXEMPLO 2 ---
+Rubrica: Recovery rate (recuperação de horas)
+Realizado: 78% | Orçamentado: 72% | Desvio: +6 p.p.
+Comentário: Recuperação acima do previsto pela maior facturação de horas técnicas seniores em mandatos de relato CSRD; o WIP (trabalho em curso) reduziu-se com a emissão de facturas no fecho. Efeito pontual — depende do ritmo de recebimentos de clientes públicos, com prazos longos.
+
+--- NOVO COMENTÁRIO ---
+Rubrica: [NOME + UNIDADE — ex.: margem por projecto, recovery rate, WIP, prazos de recebimento]
+Realizado: [VALOR] | Orçamentado: [VALOR] | Desvio: [VALOR]
+Factos relevantes: [2-3 PONTOS]
+
+Escreve o comentário no mesmo formato: número, leitura, causa, classificação pontual/estrutural e recomendação. Sê específico e orientado a acção.`
+  },
+  {
+    id:'st-fin3', cat:'financeiro', type:'cot',
+    title:'Avaliação de viabilidade de investimento',
+    author:'Arranque',
+    desc:'Análise passo-a-passo de VAL, TIR, payback e sensibilidade de uma decisão de investimento.',
+    prompt:`És um analista financeiro sénior a avaliar uma decisão de investimento. Raciocina passo a passo antes de concluir. O investimento pode ser da própria consultora (ex.: abrir nova linha de serviço de pegada de carbono, adquirir software de SIG/cálculo de BNG, contratar uma equipa especialista) ou a avaliação de um investimento verde de um cliente.
+
+Investimento: [DESCRIÇÃO — ex.: nova linha de serviço de carbono / software GIS / contratação de equipa de biodiversidade]
+Investimento inicial (CAPEX): [VALOR]
+Fluxos de caixa esperados por ano: [LISTA POR ANO — ex.: honorários incrementais, poupança de sub-contratação]
+Horizonte: [Nº ANOS]
+Taxa de desconto / custo de capital: [%]
+Pressupostos-chave: [ex.: nº de mandatos/ano, preço médio de projecto, taxa de utilização da equipa]
+
+Conduz a análise por passos:
+1. Primeiro, valida a coerência dos pressupostos — quais são frágeis ou optimistas?
+2. Calcula VAL, TIR e período de recuperação (payback). Mostra a lógica, não só o resultado.
+3. Identifica as 2-3 variáveis a que o resultado é mais sensível
+4. Faz um teste de stress: o que acontece ao VAL se a variável crítica piorar 15%?
+5. Conclui com uma recomendação fundamentada: avançar, avançar com condições, ou não avançar
+
+Sê transparente quanto à incerteza. Marca com [CONFIRMAR] qualquer pressuposto a validar. NÃO inventes dados de mercado.`
+  },
+  {
+    id:'st-mkt1', cat:'marketing', type:'one',
+    title:'Post de LinkedIn para a marca',
+    author:'Arranque',
+    desc:'Gera um post de LinkedIn alinhado com a marca, com gancho, valor e call-to-action.',
+    prompt:`És um gestor de marketing de conteúdos da Get2C. Escreve um post de LinkedIn para a página da Get2C.
+
+Tema / acontecimento: [DESCRIÇÃO — ex.: novo requisito CSRD/ESRS, alinhamento com a EU Taxonomy, projecto de biodiversidade/BNG, plano de descarbonização]
+Objectivo do post: [ex.: notoriedade, gerar leads, recrutamento, thought leadership]
+Público-alvo: [ex.: decisores de sustentabilidade, CFOs sob pressão de relato, promotores de projectos, instituições financeiras]
+Mensagem central (uma frase): [QUAL]
+Call-to-action: [ex.: ler artigo, contactar, inscrever-se em webinar]
+
+Requisitos:
+- Primeira linha que prenda nos primeiros 2 segundos (sem clickbait)
+- Corpo: 3-5 parágrafos curtos, linguagem clara, uma ideia por parágrafo
+- Inclui 1 dado ou exemplo concreto que dê credibilidade
+- Termina com o call-to-action e 3-5 hashtags relevantes
+- Tom: profissional mas humano, alinhado com a marca Get2C
+- Extensão: 120-200 palavras
+- NÃO inventes estatísticas — marca com [CONFIRMAR] qualquer número`
+  },
+  {
+    id:'st-mkt2', cat:'marketing', type:'few',
+    title:'Títulos e ganchos no tom da marca',
+    author:'Arranque',
+    desc:'Gera opções de título no registo da marca a partir de 2 exemplos.',
+    prompt:`És um copywriter. Estuda os exemplos de títulos da marca e gera novas opções no mesmo registo.
+
+--- EXEMPLO 1 ---
+Contexto: lançamento de relatório de sustentabilidade
+Título: "O que ninguém te conta sobre relatar emissões de Scope 3"
+Porque funciona: cria curiosidade, fala de uma dor real do público, sem exagero
+
+--- EXEMPLO 2 ---
+Contexto: webinar sobre conformidade CSRD
+Título: "CSRD em 2026: as 3 decisões que não podes adiar"
+Porque funciona: específico, urgência credível, promessa clara e finita
+
+--- EXEMPLO 3 ---
+Contexto: serviço de due diligence ambiental e biodiversidade (BNG) para promotores
+Título: "Comprou o terreno. Já sabe o que o RJIA e a Natura 2000 lhe vão exigir?"
+Porque funciona: fala directamente da dor do promotor, ancorado no risco regulatório real, sem alarmismo
+
+--- NOVO PEDIDO ---
+Contexto: [DESCRIÇÃO DO CONTEÚDO/CAMPANHA]
+Público: [QUEM]
+Acção desejada: [O QUE QUERES QUE FAÇAM]
+
+Gera 5 opções de título no mesmo estilo. Para cada uma, uma linha a explicar porque funciona. Evita superlativos vazios e promessas que não consigamos cumprir.`
+  },
+  {
+    id:'st-mkt3', cat:'marketing', type:'cot',
+    title:'Diagnóstico de funil e plano de campanha',
+    author:'Arranque',
+    desc:'Diagnostica o funil e propõe plano priorizado, passo a passo.',
+    prompt:`És um estratega de marketing numa consultora de ambiente e sustentabilidade B2B de nicho. Diagnostica o funil e propõe um plano, raciocinando passo a passo. Tem em conta a realidade do negócio: ciclo de venda longo, poucos leads mas de alto valor, decisão técnica e por comité.
+
+Objectivo de negócio: [ex.: gerar X leads qualificados de alto valor em Y meses para serviços CSRD/EIA/carbono]
+Dados actuais do funil: [visitas, taxa de conversão por etapa, CPL, CAC se disponível]
+Canais activos: [ex.: LinkedIn orgânico, webinars técnicos, eventos sectoriais, referências/passa-palavra]
+Orçamento disponível: [VALOR]
+Restrições: [ex.: equipa pequena, ciclo de venda longo, audiência reduzida mas qualificada]
+
+Conduz o raciocínio:
+1. Identifica onde está a maior fuga no funil (qual a etapa com pior conversão e porquê)
+2. Quantifica o impacto potencial de corrigir essa etapa vs. atrair mais tráfego (atenção: em nicho, mais tráfego raramente é a resposta)
+3. Prioriza 3 acções por rácio impacto/esforço, adequadas a venda de alto valor e ciclo longo
+4. Para cada acção: canal, métrica de sucesso e prazo
+5. Define o KPI principal e o ponto de revisão (quando reavaliar)
+
+Mostra o raciocínio em cada passo. Marca com [CONFIRMAR] qualquer dado que assumiste e devias validar.`
+  },
+  {
+    id:'st-com1', cat:'comercial', type:'one',
+    title:'Email de prospeção',
+    author:'Arranque',
+    desc:'Email de primeira abordagem B2B, curto e focado no destinatário.',
+    prompt:`És um comercial sénior B2B da Get2C (consultora de ambiente e sustentabilidade). Escreve um email de primeira abordagem a um potencial cliente.
+
+Empresa-alvo e sector: [DESCRIÇÃO — ex.: operador industrial, promotor de projecto, instituição financeira]
+Cargo do destinatário: [ex.: Director de Sustentabilidade, CFO, Director de Operações]
+Gatilho/contexto: [ex.: CSRD a entrar em vigor para a empresa, necessidade de EIA para expansão de unidade, requisito SFDR de um financiador, meta de descarbonização anunciada]
+Como podemos ajudar (uma frase): [PROPOSTA DE VALOR — serviços ambientais/ESG da Get2C: relato CSRD, EIA/RJIA, inventário de carbono, due diligence ambiental]
+Prova social disponível: [ex.: caso semelhante no mesmo sector, resultado mensurável]
+
+Requisitos:
+- Assunto curto e específico que não pareça spam
+- Abertura focada no destinatário, não em nós ("Reparei que...", não "Somos a empresa...")
+- Corpo: relevância (gatilho regulatório) → valor concreto → prova → pedido pequeno e fácil
+- Um único call-to-action de baixo atrito (ex.: 15 min de conversa)
+- Extensão: 90-130 palavras
+- Tom: directo, respeitoso do tempo do outro, sem floreados
+- NÃO inventes resultados de clientes — usa [CONFIRMAR] para qualquer número`
+  },
+  {
+    id:'st-com2', cat:'comercial', type:'few',
+    title:'Resposta a objeções',
+    author:'Arranque',
+    desc:'Responde a objeções de venda no estilo reconhecer→reenquadrar→provar→reabrir.',
+    prompt:`És um comercial sénior da Get2C (consultora de ambiente e sustentabilidade). Estuda os exemplos de resposta a objeções e responde à nova objeção no mesmo estilo.
+
+Princípio: reconhecer a objeção → reenquadrar (risco regulatório / credibilidade) → dar prova → reabrir a conversa. Nunca confrontar.
+
+--- EXEMPLO 1 ---
+Objeção: "Isto fazemos internamente."
+Resposta: Faz todo o sentido terem essa capacidade interna. A questão que vemos surgir não é fazer, é defender o resultado perante o auditor ou o regulador (APA, ICNF): o relato CSRD e os dados ESG têm de aguentar escrutínio externo. Vale 20 minutos para ver onde está o risco de credibilidade no vosso caso?
+
+--- EXEMPLO 2 ---
+Objeção: "O nosso TOC/ROC trata disso."
+Resposta: Compreendo — a contabilidade é essencial. Mas o relato de sustentabilidade segue os ESRS e a EU Taxonomy, não o normativo contabilístico; é um terreno técnico distinto onde um erro de dupla materialidade ou de elegibilidade fica exposto. Faz sentido olharmos juntos para o que a [EMPRESA] já tem e onde fica vulnerável?
+
+--- NOVA OBJEÇÃO ---
+Objeção: [O QUE O CLIENTE DISSE — ex.: "ainda não somos obrigados a reportar", "é mais barato com um concorrente generalista"]
+Contexto: [RELAÇÃO, FASE DA NEGOCIAÇÃO]
+
+Escreve a resposta no mesmo formato e tom, reenquadrando sempre em risco regulatório ou credibilidade. Mantém-na curta (60-100 palavras) e termina sempre com uma pergunta que reabre o diálogo.`
+  },
+  {
+    id:'st-com3', cat:'comercial', type:'cot',
+    title:'Preparação de negociação',
+    author:'Arranque',
+    desc:'Plano passo-a-passo de estratégia de negociação: interesses, BATNA, concessões, âncora.',
+    prompt:`És um comercial sénior da Get2C a preparar a negociação de âmbito e honorários de um projecto de consultoria ambiental. Pensa passo a passo antes de definir a estratégia. Nota: o âmbito pode alterar-se com a época de campo (campanhas multi-época) ou com exigências do regulador (APA, ICNF, CCDR), o que tens de proteger no acordo.
+
+Cliente e contexto: [DESCRIÇÃO — ex.: promotor de projecto que precisa de EIA, industrial a iniciar relato CSRD]
+O que queremos fechar: [OBJECTIVO ESPECÍFICO — âmbito, valor, prazo]
+O que sabemos das prioridades do cliente: [O QUE LHES IMPORTA — ex.: prazo de submissão ao regulador, previsibilidade de custo]
+Pontos de tensão prováveis: [ex.: honorários, prazos dependentes da época de campo, pedidos de elementos adicionais pelo regulador]
+A nossa margem de manobra: [ONDE PODEMOS CEDER E ONDE NÃO]
+
+Conduz a preparação:
+1. Qual é o interesse real do cliente por trás da posição declarada?
+2. Qual é a nossa melhor alternativa se não houver acordo (BATNA)? E a deles?
+3. Que concessões nos custam pouco mas têm valor percebido alto para o cliente?
+4. Define a âncora inicial e a linha vermelha — com justificação; prevê uma cláusula de revisão de âmbito para alterações por época de campo ou exigências do regulador
+5. Antecipa as 2-3 objeções mais prováveis e prepara resposta para cada
+6. Escreve a frase de abertura da reunião — exactamente o que dizes primeiro
+
+Mostra o raciocínio. Sê específico. Marca com [CONFIRMAR] o que precisas de validar antes da reunião.`
+  },
+  {
+    id:'st-rh1', cat:'rh', type:'one',
+    title:'Descrição de função / anúncio',
+    author:'Arranque',
+    desc:'Anúncio de recrutamento claro e apelativo, com linguagem inclusiva.',
+    prompt:`És um especialista de recrutamento da Get2C (consultora de ambiente e sustentabilidade). Escreve uma descrição de função apelativa e clara.
+
+Função: [TÍTULO — ex.: Consultor de Ambiente, Especialista de Sustentabilidade/ESG, Técnico de SIG/GIS, Especialista de Biodiversidade, Analista de Carbono]
+Equipa / contexto: [ONDE SE INSERE, A QUEM REPORTA — ex.: equipa de EIA, equipa de relato CSRD]
+Responsabilidades principais: [LISTA 4-6 — ex.: elaborar estudos de impacte ambiental, conduzir trabalho de campo de biodiversidade, preparar relatos ESRS, calcular inventários de carbono segundo o GHG Protocol, interagir com reguladores APA/ICNF/CCDR]
+Requisitos obrigatórios vs. valorizados: [DISTINGUE OS DOIS — ex.: formação em eng.ª do ambiente/biologia; valorizado: domínio de ArcGIS/QGIS, conhecimento do RJIA, Natura 2000, CSRD/ESRS]
+O que oferecemos: [ex.: modelo de trabalho, desenvolvimento, cultura]
+
+Requisitos:
+- Abertura que vende a oportunidade (não começa por "Procuramos...")
+- Responsabilidades em verbos de acção, concretas e não genéricas
+- Separa claramente "essencial" de "valorizado" para não afastar bons candidatos
+- Linguagem inclusiva e neutra quanto a género
+- Termina com o processo de candidatura e próximos passos
+- Extensão: 250-350 palavras
+- Tom: profissional, humano, alinhado com a cultura da Get2C`
+  },
+  {
+    id:'st-rh2', cat:'rh', type:'few',
+    title:'Feedback estruturado de desempenho',
+    author:'Arranque',
+    desc:'Escreve feedback no modelo situação→comportamento→impacto→caminho a partir de 2 exemplos.',
+    prompt:`És um business partner de RH. Estuda os exemplos de feedback e escreve um novo no mesmo modelo (situação → comportamento → impacto → caminho).
+
+--- EXEMPLO 1 (reforço positivo) ---
+Situação: Relatório de AIA do projecto [X] submetido à APA na semana passada.
+Comportamento: Antecipou pedidos prováveis do regulador e reforçou a fundamentação técnica antes da submissão.
+Impacto: O relatório passou a conformidade sem pedido de elementos adicionais — raro neste tipo de dossier.
+Caminho: Continuar a aplicar esta antecipação em dossiers de maior risco regulatório; podes mentorar colegas júnior nisto.
+
+--- EXEMPLO 2 (desenvolvimento) ---
+Situação: Submissões do projecto [Y] ao regulador no último mês.
+Comportamento: Duas submissões chegaram depois do prazo acordado, sem aviso prévio.
+Impacto: A equipa de campo e o cliente em consulta pública tiveram de reorganizar trabalho de última hora.
+Caminho: Combinar um aviso logo que um prazo de submissão pareça em risco; reveremos em 4 semanas.
+
+--- NOVO FEEDBACK ---
+Pessoa / contexto: [SEM DADOS PESSOAIS SENSÍVEIS]
+Tipo: [reforço / desenvolvimento]
+Situação observada: [FACTOS]
+
+Escreve o feedback no mesmo formato. Baseia-te em comportamentos observáveis (não em traços de personalidade), sê específico e termina com um caminho construtivo e acordável.`
+  },
+  {
+    id:'st-rh3', cat:'rh', type:'cot',
+    title:'Análise de caso de pessoas',
+    author:'Arranque',
+    desc:'Análise passo-a-passo de situação sensível de equipa (retenção, conflito), com opções.',
+    prompt:`És um business partner de RH sénior a analisar uma situação sensível de equipa. Raciocina passo a passo antes de recomendar.
+
+Situação: [DESCRIÇÃO — ex.: risco de saída de especialista sénior com conhecimento regulatório crítico (RJIA, CSRD) em época de picos de submissão; conflito entre membros; queda de motivação]
+O que se sabe: [FACTOS OBSERVÁVEIS, SEM ESPECULAÇÃO]
+Quem está envolvido e respectivos papéis: [SEM DADOS PESSOAIS SENSÍVEIS]
+Restrições: [ex.: orçamento, políticas internas, calendário de submissões a regulador, dependência de conhecimento especializado]
+
+Conduz a análise:
+1. Separa factos de interpretações — o que sabemos mesmo vs. o que estamos a assumir?
+2. Quais são as causas-raiz plausíveis? Distingue causas de sintomas.
+3. Que partes interessadas são afectadas e qual o risco para cada uma?
+4. Gera 2-3 opções de actuação com prós, contras e implicações (incluindo não agir)
+5. Recomenda um caminho com primeiros passos concretos e como medir se está a resultar
+
+Sê cauteloso e ético: trata pessoas com respeito, evita conclusões precipitadas. Marca com [CONFIRMAR] o que precisa de ser verificado com as pessoas envolvidas. Isto é apoio à decisão, não aconselhamento jurídico-laboral.`
+  },
+  // CONTABILIDADE
+  {
+    id:'st-ct1', cat:'contabilidade', type:'one',
+    title:'Nota de enquadramento contabilístico',
+    author:'Arranque',
+    desc:'Enquadramento contabilístico de uma operação segundo o SNC/IFRS, com contas e impactos.',
+    prompt:`És um contabilista sénior numa consultora de ambiente e sustentabilidade. Redige uma nota de enquadramento contabilístico para uma operação, segundo o SNC (ou IFRS quando aplicável).
+
+Operação: [DESCRIÇÃO — ex.: reconhecimento de rédito de projecto de consultoria plurianual, subsídio a fundo perdido para projecto verde, provisão para responsabilidade ambiental, aquisição de software de SIG]
+Normativo aplicável: [ex.: SNC, IFRS; indica a NCRF/IAS/IFRS se conhecida]
+Montantes envolvidos: [VALORES]
+Contexto: [ex.: projecto a 18 meses faturado por marcos, subsídio condicionado a execução, passivo ambiental estimado]
+
+Requisitos:
+- Indica o tratamento contabilístico (reconhecimento, mensuração, momento) com referência à norma aplicável
+- Identifica as contas SNC envolvidas e o sentido dos lançamentos (a débito/crédito), de forma indicativa
+- Sinaliza impactos em resultados, balanço e, se relevante, fiscalidade
+- Termina com a documentação de suporte necessária
+- Extensão: 200-350 palavras
+- NÃO inventes valores nem números de norma — usa [CONFIRMAR] e [VERIFICAR NORMA]
+- Isto é apoio à preparação, não parecer contabilístico/fiscal vinculativo; o tratamento final deve ser validado com o ROC/TOC e a norma em vigor`
+  },
+  {
+    id:'st-ct2', cat:'contabilidade', type:'few',
+    title:'Justificação de saldo / reconciliação',
+    author:'Arranque',
+    desc:'Justifica saldos e reconciliações no formato da casa a partir de 2 exemplos.',
+    prompt:`És um contabilista sénior. Estuda os exemplos de comentário de reconciliação/justificação de saldo e escreve um novo no mesmo formato.
+
+--- EXEMPLO 1 ---
+Conta: Clientes — c/c (211)
+Saldo contabilístico: 84.500€ | Saldo conciliado: 81.200€ | Diferença: 3.300€
+Justificação: Diferença corresponde a nota de crédito emitida ao cliente [X] ainda não relevada. A regularizar no período seguinte. Sem impacto em imparidade.
+
+--- EXEMPLO 2 ---
+Conta: Acréscimos de rédito (271)
+Saldo: 22.000€
+Justificação: Trabalho de consultoria executado e não faturado no projecto [Y] (marco contratual atingido a 28/06). Faturação prevista para o mês seguinte; suportado por mapa de horas e auto de medição.
+
+--- NOVA ENTRADA ---
+Conta: [NOME + Nº SNC]
+Saldo: [VALOR]
+Contexto: [FACTOS]
+
+Escreve a justificação no mesmo formato: facto, causa, suporte documental e regularização prevista. Sê específico. NÃO inventes valores — usa [CONFIRMAR].`
+  },
+  {
+    id:'st-ct3', cat:'contabilidade', type:'cot',
+    title:'Análise de tratamento contabilístico complexo',
+    author:'Arranque',
+    desc:'Análise passo-a-passo do tratamento contabilístico de operações complexas (rédito plurianual, provisões ambientais, subsídios).',
+    prompt:`És um contabilista sénior a analisar o tratamento contabilístico de uma situação complexa. Raciocina passo a passo antes de concluir.
+
+Situação: [DESCRIÇÃO — ex.: reconhecimento de rédito de projecto plurianual por grau de acabamento, provisão para desmantelamento/responsabilidade ambiental, subsídio ao investimento para projecto de descarbonização, tratamento de créditos de carbono]
+Normativo de referência: [SNC / IFRS]
+Dados relevantes: [valores, prazos, condições contratuais, condições de subsídio]
+
+Conduz a análise:
+1. Qualifica a operação: que norma(s) se aplica(m) e porquê? Distingue a substância da forma.
+2. Define o momento de reconhecimento e o critério de mensuração
+3. Aplica ao caso: que lançamentos, em que períodos, com que valores (usa [CONFIRMAR] onde faltarem dados)
+4. Identifica os juízos críticos e a sensibilidade do resultado a cada um (ex.: grau de acabamento, probabilidade de saída de recursos, condições do subsídio)
+5. Sinaliza impactos em resultados, balanço e fiscalidade, e a documentação de suporte exigível
+
+Sê transparente quanto à incerteza. Usa [VERIFICAR NORMA] onde o texto da norma deve ser confirmado. Isto é apoio à decisão, não parecer vinculativo — validar com ROC/TOC.`
   }
 ];
 
@@ -2070,7 +2431,9 @@ function renderFeed() {
 
   const catNames = {
     propostas:'Propostas', apresentacoes:'Apresentações', relatorios:'Relatórios',
-    dados:'Dados', excel:'Excel', comunicacao:'Comunicação', outro:'Outro'
+    dados:'Dados', excel:'Excel', comunicacao:'Comunicação',
+    financeiro:'Financeiro', contabilidade:'Contabilidade', comercial:'Comercial', marketing:'Marketing', rh:'RH',
+    outro:'Outro'
   };
   const typeNames = { one:'1-shot', few:'few-shot', cot:'chain-of-thought' };
 
