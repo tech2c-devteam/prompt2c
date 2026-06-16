@@ -16,7 +16,8 @@ O Prompt2C é uma ferramenta colaborativa interna que permite à equipa Get2C co
 
 ## Funcionalidades
 
-- **Biblioteca de prompts** organizada por categoria e técnica
+- **Biblioteca de prompts** organizada por categoria de tarefa (Propostas, Relatórios, Dados, Excel, Comunicação, Apresentações) e por equipa (Financeiro, Contabilidade, Comercial, Marketing, RH) e por técnica
+- **Prompts em português**, ancorados no contexto Get2C (ambiente e sustentabilidade), com os identificadores de norma em inglês
 - **Sistema de votação** (upvote/downvote) — os melhores prompts sobem ao topo
 - **Avaliação por estrelas** (1 a 5) para medir qualidade do output
 - **Leaderboard** em tempo real dos prompts mais votados pela equipa
@@ -67,6 +68,8 @@ O Prompt2C é uma ferramenta colaborativa interna que permite à equipa Get2C co
 
 ## Categorias disponíveis
 
+As categorias cruzam duas dimensões: **tipo de tarefa** (as 6 primeiras) e **equipa** (as 5 últimas).
+
 | Categoria | Exemplos de uso |
 |-----------|----------------|
 | **Propostas** | Resumos executivos, Scope of Work, justificação de fees |
@@ -75,6 +78,11 @@ O Prompt2C é uma ferramenta colaborativa interna que permite à equipa Get2C co
 | **Dados** | Interpretação de monitorização, tabelas de compliance, diagnóstico de anomalias |
 | **Excel** | Registos de monitorização, cálculos BNG, trackers de fees |
 | **Comunicação** | Emails de seguimento, resposta a objecções, preparação de reuniões difíceis |
+| **Financeiro** | Análise de desvios, fecho mensal, viabilidade de investimento |
+| **Contabilidade** | Enquadramento contabilístico, justificação de saldos, tratamento de operações complexas |
+| **Comercial** | Prospeção, resposta a objeções, preparação de negociação |
+| **Marketing** | Posts LinkedIn, títulos no tom da marca, diagnóstico de funil |
+| **RH** | Descrição de funções, feedback estruturado, análise de casos de pessoas |
 
 ---
 
@@ -130,7 +138,7 @@ Qualquer alteração ao `index.html` é publicada automaticamente no GitHub Page
 ## Roadmap
 
 ### v1.0 — Lançamento (actual)
-- [x] Biblioteca com 18 prompts de arranque
+- [x] Biblioteca com 36 prompts de arranque em português (21 consultoria + 15 equipas: Financeiro, Contabilidade, Comercial, Marketing, RH)
 - [x] Sistema de votação e rating
 - [x] Formulário de submissão com exemplo de resultado
 - [x] Secção pedagógica One-Shot / Few-Shot / Chain-of-Thought
@@ -144,7 +152,7 @@ Qualquer alteração ao `index.html` é publicada automaticamente no GitHub Page
 - [ ] Botão "Testar prompt" com integração directa Claude API
 
 ### v2.0 — Expansão
-- [ ] Multi-workspace (RH, Financeiro, Marketing, Comercial, Administração)
+- [~] Cobertura por equipa — **feito parcialmente (2026-06-16)**: criadas categorias Financeiro, Contabilidade, Comercial, Marketing e RH, com prompts de arranque dedicados. Falta a separação total em workspaces independentes (filtragem/permissões por equipa).
 - [ ] Versioning de prompts (histórico de edições)
 - [ ] Analytics de uso (prompts mais copiados)
 - [ ] Arquivo automático de prompts com score negativo
@@ -156,10 +164,11 @@ Qualquer alteração ao `index.html` é publicada automaticamente no GitHub Page
 | Workspace | Estado | URL |
 |-----------|--------|-----|
 | Get2C · Consultoria | ✅ Activo | [prompt2c](https://tech2c-devteam.github.io/prompt2c/) |
-| Get2C · RH | 🔜 Planeado | — |
-| Get2C · Financeiro | 🔜 Planeado | — |
-| Get2C · Marketing | 🔜 Planeado | — |
-| Get2C · Comercial | 🔜 Planeado | — |
+| Get2C · RH | 🟡 Coberto por categoria | [prompt2c](https://tech2c-devteam.github.io/prompt2c/) |
+| Get2C · Financeiro | 🟡 Coberto por categoria | [prompt2c](https://tech2c-devteam.github.io/prompt2c/) |
+| Get2C · Marketing | 🟡 Coberto por categoria | [prompt2c](https://tech2c-devteam.github.io/prompt2c/) |
+| Get2C · Comercial | 🟡 Coberto por categoria | [prompt2c](https://tech2c-devteam.github.io/prompt2c/) |
+| Get2C · Contabilidade | 🟡 Coberto por categoria | [prompt2c](https://tech2c-devteam.github.io/prompt2c/) |
 
 ---
 
@@ -168,10 +177,9 @@ Qualquer alteração ao `index.html` é publicada automaticamente no GitHub Page
 A biblioteca cresce com a equipa. As regras são simples:
 
 1. **Só partilhas prompts que já testaste** num caso real
-2. **Escreve o prompt em inglês** — melhores resultados, menos tokens
-3. **Usa placeholders** `[ASSIM]` para campos variáveis
-4. **Sem dados de clientes** — usa `[CLIENTE]`, `[PROJECTO]`
-5. **Vota honestamente** — um downvote honesto vale mais que um upvote de cortesia
+2. **Usa placeholders** `[ASSIM]` para campos variáveis
+3. **Sem dados de clientes** — usa `[CLIENTE]`, `[PROJECTO]`
+4. **Vota honestamente** — um downvote honesto vale mais que um upvote de cortesia
 
 ---
 
@@ -182,4 +190,4 @@ Contacto interno: Vanessa Ávila
 
 ---
 
-*Prompt2C · v1.0 · Get2C · Maio 2026*
+*Prompt2C · v1.3 · Get2C · actualizado a 2026-06-16*
